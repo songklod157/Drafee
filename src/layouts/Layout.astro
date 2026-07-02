@@ -1,0 +1,172 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  schemaJson?: string;
+}
+
+const { title, description, schemaJson } = Astro.props;
+const canonical = Astro.props.canonical || `https://drafee.com${Astro.url.pathname}`;
+
+const navLinks = [
+  { href: '/ig-line-break', label: 'เว้นบรรทัด IG' },
+  { href: '/character-counter', label: 'นับตัวอักษร' },
+  { href: '/transfer-fee-calculator', label: 'ค่าโอนบ้าน' },
+  { href: '/severance-calculator', label: 'เงินชดเชย' },
+  { href: '/withholding-tax-calculator', label: 'ภาษี WHT' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Drafee" />
+  <meta property="og:locale" content="th_TH" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+
+  <!-- hreflang -->
+  <link rel="alternate" hreflang="th" href={canonical} />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- Google Fonts: Noto Sans Thai -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Schema JSON-LD -->
+  {schemaJson && <script type="application/ld+json" set:html={schemaJson} />}
+</head>
+<body class="min-h-screen bg-gray-50 font-sans text-gray-900 antialiased">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur-sm">
+    <div class="mx-auto max-w-6xl px-4">
+      <div class="flex h-14 items-center justify-between gap-4">
+
+        <!-- Logo -->
+        <a href="/" class="flex shrink-0 items-center gap-2">
+          <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500 to-cyan-400 text-sm font-black text-white shadow-sm">D</div>
+          <span class="text-lg font-bold text-gray-900">Drafee</span>
+        </a>
+
+        <!-- Desktop Nav -->
+        <nav class="hidden items-center gap-0.5 md:flex">
+          {navLinks.map(link => (
+            <a
+              href={link.href}
+              class={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                currentPath === link.href
+                  ? 'bg-teal-50 text-teal-700'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+              }`}
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+
+        <!-- Mobile Nav Toggle -->
+        <button id="nav-toggle" class="rounded-lg p-2 text-gray-600 hover:bg-gray-100 md:hidden" aria-label="เปิดเมนู">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Nav Menu -->
+      <div id="mobile-nav" class="hidden border-t border-gray-100 pb-3 md:hidden">
+        {navLinks.map(link => (
+          <a
+            href={link.href}
+            class={`block rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+              currentPath === link.href
+                ? 'bg-teal-50 text-teal-700'
+                : 'text-gray-600 hover:bg-gray-100'
+            }`}
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <slot />
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-16 border-t border-gray-200 bg-white">
+    <div class="mx-auto max-w-6xl px-4 py-10">
+      <div class="grid gap-8 sm:grid-cols-3">
+        <!-- Brand -->
+        <div>
+          <div class="flex items-center gap-2">
+            <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500 to-cyan-400 text-sm font-black text-white">D</div>
+            <span class="font-bold text-gray-900">Drafee</span>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 leading-relaxed">
+            เครื่องมือออนไลน์ฟรีสำหรับคนไทย<br/>ประมวลผลบน browser ไม่มีเซิร์ฟเวอร์ ปลอดภัย 100%
+          </p>
+        </div>
+
+        <!-- Creator Tools -->
+        <div>
+          <h3 class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">เครื่องมือครีเอเตอร์</h3>
+          <ul class="space-y-2">
+            <li><a href="/ig-line-break" class="text-sm text-gray-600 hover:text-teal-600">เว้นบรรทัดแคปชั่น IG</a></li>
+            <li><a href="/character-counter" class="text-sm text-gray-600 hover:text-teal-600">นับตัวอักษรทุกแพลตฟอร์ม</a></li>
+          </ul>
+        </div>
+
+        <!-- Finance Tools -->
+        <div>
+          <h3 class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">เครื่องมือการเงิน</h3>
+          <ul class="space-y-2">
+            <li><a href="/transfer-fee-calculator" class="text-sm text-gray-600 hover:text-teal-600">คำนวณค่าโอนบ้าน-ที่ดิน</a></li>
+            <li><a href="/severance-calculator" class="text-sm text-gray-600 hover:text-teal-600">คำนวณเงินชดเชยเลิกจ้าง</a></li>
+            <li><a href="/withholding-tax-calculator" class="text-sm text-gray-600 hover:text-teal-600">คำนวณภาษีหัก ณ ที่จ่าย</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-8 border-t border-gray-100 pt-6">
+        <p class="text-xs text-gray-400 leading-relaxed">
+          <strong>คำเตือน:</strong> เครื่องมือทุกชิ้นบนเว็บไซต์นี้จัดทำขึ้นเพื่อให้ข้อมูลเบื้องต้นเท่านั้น ไม่ใช่คำแนะนำทางกฎหมายหรือการเงิน
+          กรุณาตรวจสอบกับผู้เชี่ยวชาญหรือหน่วยงานที่เกี่ยวข้องก่อนตัดสินใจ ข้อมูลอาจมีการเปลี่ยนแปลง
+        </p>
+        <p class="mt-3 text-xs text-gray-400">© {new Date().getFullYear()} Drafee · drafee.com · ข้อมูลทุกอย่างประมวลผลบน browser ของคุณ ไม่มีการส่งข้อมูลออกไปยังเซิร์ฟเวอร์</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile Nav Script -->
+  <script is:inline>
+    document.getElementById('nav-toggle').addEventListener('click', function() {
+      document.getElementById('mobile-nav').classList.toggle('hidden');
+    });
+  </script>
+
+</body>
+</html>

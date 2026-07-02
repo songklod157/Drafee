@@ -1,0 +1,439 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+
+const faqs = [
+  {
+    q: 'ฟรีแลนซ์ถูกหัก ณ ที่จ่ายเท่าไร?',
+    a: 'ขึ้นอยู่กับประเภทงาน: ค่าบริการทั่วไป (เช่น ค่าที่ปรึกษา ค่าออกแบบ) ถูกหัก 3%, ค่าจ้างทำของหรือรับเหมา หัก 3% เช่นกัน, ค่าโฆษณาหัก 2%, ค่าขนส่งหัก 1% งานบางประเภทหัก 5% เช่น ค่านายหน้า'
+  },
+  {
+    q: 'VAT กับ WHT ต่างกันอย่างไร?',
+    a: 'VAT (ภาษีมูลค่าเพิ่ม 7%) เป็นภาษีที่ผู้ซื้อ/ลูกค้าจ่าย และผู้ขายนำส่งสรรพากร แต่ WHT (ภาษีหัก ณ ที่จ่าย) เป็นภาษีที่ลูกค้าหักจากเงินค่าบริการของเราก่อนโอน แล้วนำส่งสรรพากรแทนเรา'
+  },
+  {
+    q: 'ต้องออกใบกำกับภาษีหรือรับรองการหักภาษีไหม?',
+    a: 'ฝ่ายลูกค้า (ผู้หัก) ต้องออก "หนังสือรับรองการหักภาษี ณ ที่จ่าย" (50 ทวิ) ให้เราทุกครั้งที่หักภาษี เราต้องเก็บไว้ใช้ยื่นภาษีสิ้นปี ส่วนถ้าเราจด VAT ต้องออกใบกำกับภาษีให้ลูกค้าด้วย'
+  },
+  {
+    q: 'ลูกค้าไม่หัก ณ ที่จ่ายให้ ทำอย่างไร?',
+    a: 'ถ้าลูกค้าเป็นบุคคลธรรมดา ไม่ใช่นิติบุคคล พวกเขาไม่มีหน้าที่หักภาษี ณ ที่จ่าย แต่ถ้าลูกค้าเป็นบริษัทและไม่หักให้ คุณอาจต้องแบกรับภาษีส่วนนั้นเอง แนะนำระบุในใบเสนอราคาว่า "ราคาก่อนหักภาษี ณ ที่จ่าย"'
+  },
+  {
+    q: 'ถ้าต้องการรับเงินสุทธิเท่าไร ต้องเสนอราคาเท่าไร?',
+    a: 'ใช้โหมด "คำนวณย้อนกลับ" ในเครื่องมือนี้ ใส่ยอดที่ต้องการรับ ระบบจะคำนวณราคาที่ต้องเสนอให้อัตโนมัติ โดยคำนึงถึง WHT และ VAT (ถ้ามี)'
+  },
+  {
+    q: 'ฟรีแลนซ์ต้องจด VAT ไหม?',
+    a: 'ถ้ารายรับจากการให้บริการเกิน 1.8 ล้านบาท/ปี ต้องจดทะเบียน VAT บังคับ ถ้าต่ำกว่านั้นไม่บังคับ แต่สามารถสมัครได้เองหากต้องการ การจด VAT ทำให้ขอคืนภาษีซื้อได้ แต่เพิ่มภาระงานเอกสาร'
+  },
+];
+
+const schema = JSON.stringify([
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "คำนวณภาษีหัก ณ ที่จ่ายออนไลน์ฟรี สำหรับฟรีแลนซ์",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web Browser",
+    "url": "https://drafee.com/withholding-tax-calculator",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "THB" },
+    "description": "คำนวณภาษีหัก ณ ที่จ่าย (WHT) สำหรับฟรีแลนซ์ไทย รองรับ 1% 2% 3% 5% + VAT 7% และโหมดคำนวณย้อนกลับ",
+    "inLanguage": "th"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(f => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": { "@type": "Answer", "text": f.a }
+    }))
+  }
+]);
+---
+
+<Layout
+  title="คำนวณภาษีหัก ณ ที่จ่าย WHT ออนไลน์ฟรี สำหรับฟรีแลนซ์ | Drafee"
+  description="คำนวณภาษีหัก ณ ที่จ่ายสำหรับฟรีแลนซ์ไทย รองรับ WHT 1% 2% 3% 5% บวก VAT 7% พร้อมโหมดคำนวณย้อนกลับ: ต้องการรับสุทธิเท่าไร → ต้องเสนอราคาเท่าไร"
+  schemaJson={schema}
+>
+
+  <!-- Hero -->
+  <div class="bg-gradient-to-b from-teal-50 via-cyan-50 to-white pt-10 pb-6">
+    <div class="mx-auto max-w-4xl px-4">
+      <div class="mb-2 text-sm text-teal-600 font-medium">เครื่องมือการเงิน · ฟรีแลนซ์</div>
+      <h1 class="text-2xl font-extrabold text-gray-900 sm:text-3xl">คำนวณภาษีหัก ณ ที่จ่าย (WHT) สำหรับฟรีแลนซ์ไทย</h1>
+      <p class="mt-2 text-gray-600 text-sm leading-relaxed">
+        WHT 3% + VAT 7% · คำนวณตรงและย้อนกลับ · ฟรี ไม่ต้องสมัครสมาชิก
+      </p>
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-4xl px-4 pb-12">
+
+    <!-- Tool Card -->
+    <div class="mt-6 rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+      <div class="p-5 sm:p-6">
+
+        <!-- Mode Toggle -->
+        <div class="mb-5">
+          <div class="flex rounded-xl border border-gray-200 overflow-hidden">
+            <button id="btn-forward" class="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-3 bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-sm font-semibold transition-colors">
+              <Icon name="arrow-down" class="h-4 w-4" /> ราคา → ยอดรับสุทธิ
+            </button>
+            <button id="btn-reverse" class="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-3 bg-white text-gray-600 hover:bg-gray-50 text-sm font-semibold transition-colors">
+              <Icon name="arrow-up" class="h-4 w-4" /> ยอดรับที่ต้องการ → ราคาเสนอ
+            </button>
+          </div>
+          <p id="mode-desc" class="mt-2 text-xs text-gray-500">โหมดตรง: ใส่ราคาที่คุณเสนอ → คำนวณว่าจะได้รับเงินสุทธิเท่าไร</p>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+
+          <!-- Inputs -->
+          <div class="space-y-4">
+
+            <!-- Forward input -->
+            <div id="input-forward">
+              <label for="price-input" class="block text-sm font-semibold text-gray-700 mb-1.5">ราคาค่าบริการที่เสนอ (บาท)</label>
+              <div class="relative">
+                <input type="number" id="price-input" placeholder="เช่น 10000" min="0" step="0.01"
+                  class="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-3 pr-16 text-sm text-gray-900 placeholder-gray-400 focus:border-teal-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-100 transition-colors" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">บาท</span>
+              </div>
+            </div>
+
+            <!-- Reverse input -->
+            <div id="input-reverse" class="hidden">
+              <label for="net-input" class="block text-sm font-semibold text-gray-700 mb-1.5">ยอดเงินสุทธิที่ต้องการรับ (บาท)</label>
+              <div class="relative">
+                <input type="number" id="net-input" placeholder="เช่น 9700" min="0" step="0.01"
+                  class="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-3 pr-16 text-sm text-gray-900 placeholder-gray-400 focus:border-teal-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-100 transition-colors" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">บาท</span>
+              </div>
+            </div>
+
+            <!-- WHT Rate -->
+            <div>
+              <label for="wht-rate" class="block text-sm font-semibold text-gray-700 mb-1.5">อัตราหัก ณ ที่จ่าย</label>
+              <select id="wht-rate"
+                class="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-teal-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-100 transition-colors">
+                <option value="3">3% — ค่าบริการ / ที่ปรึกษา / ออกแบบ (ส่วนใหญ่)</option>
+                <option value="1">1% — ค่าขนส่ง</option>
+                <option value="2">2% — ค่าโฆษณา</option>
+                <option value="5">5% — ค่านายหน้า / ค่าเช่า</option>
+              </select>
+            </div>
+
+            <!-- VAT Toggle -->
+            <div class="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+              <label class="relative inline-flex cursor-pointer items-center gap-3">
+                <input type="checkbox" id="include-vat" class="peer sr-only" />
+                <div class="peer h-5 w-9 rounded-full bg-gray-200 transition-colors peer-checked:bg-teal-600 after:absolute after:left-0.5 after:top-0.5 after:h-4 after:w-4 after:rounded-full after:bg-white after:shadow after:transition-all peer-checked:after:translate-x-4"></div>
+                <span class="text-sm font-medium text-gray-900">รวม VAT 7%</span>
+              </label>
+              <p class="text-xs text-gray-500 ml-auto">สำหรับผู้จด VAT</p>
+            </div>
+
+            <button id="calc-btn"
+              class="w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 px-4 py-3 text-sm font-bold text-white hover:from-teal-600 hover:to-cyan-600 transition-colors">
+              <Icon name="calculator" class="h-4 w-4" /> คำนวณ
+            </button>
+          </div>
+
+          <!-- Results -->
+          <div>
+            <div id="results-placeholder" class="flex h-full min-h-[280px] items-center justify-center rounded-xl border-2 border-dashed border-gray-200 text-center text-sm text-gray-400">
+              <div>
+                <Icon name="calculator" class="h-10 w-10 mx-auto mb-2 text-gray-300" />
+                <p>กรอกข้อมูลแล้วกด<br/>"คำนวณ"</p>
+              </div>
+            </div>
+
+            <div id="results" class="hidden space-y-3">
+
+              <!-- Forward results -->
+              <div id="results-forward">
+                <div class="rounded-xl border border-gray-200 overflow-hidden">
+                  <div class="bg-gray-50 px-4 py-2.5 border-b border-gray-100">
+                    <p class="text-xs font-bold text-gray-600 uppercase tracking-wide">สรุปรายการ</p>
+                  </div>
+                  <div class="divide-y divide-gray-100">
+                    <div class="flex justify-between px-4 py-3">
+                      <p class="text-sm text-gray-600">ราคาค่าบริการ</p>
+                      <p id="r-price" class="text-sm font-semibold text-gray-900">—</p>
+                    </div>
+                    <div id="vat-row-f" class="hidden flex justify-between px-4 py-3">
+                      <p class="text-sm text-gray-600">+ VAT 7%</p>
+                      <p id="r-vat" class="text-sm font-semibold text-gray-900">—</p>
+                    </div>
+                    <div class="flex justify-between px-4 py-3">
+                      <p id="r-wht-label" class="text-sm text-gray-600">− หัก ณ ที่จ่าย 3%</p>
+                      <p id="r-wht" class="text-sm font-semibold text-red-600">—</p>
+                    </div>
+                    <div class="flex justify-between px-4 py-3 bg-teal-50">
+                      <p class="text-sm font-bold text-gray-900">ยอดที่ได้รับจริง</p>
+                      <p id="r-net" class="text-base font-black text-teal-700">—</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="rounded-xl bg-gray-50 border border-gray-200 p-3 text-xs text-gray-600 leading-relaxed mt-2">
+                  <span id="r-summary"></span>
+                </div>
+              </div>
+
+              <!-- Reverse results -->
+              <div id="results-reverse" class="hidden">
+                <div class="rounded-xl border border-gray-200 overflow-hidden">
+                  <div class="bg-gray-50 px-4 py-2.5 border-b border-gray-100">
+                    <p class="text-xs font-bold text-gray-600 uppercase tracking-wide">ต้องเสนอราคาเท่าไร?</p>
+                  </div>
+                  <div class="divide-y divide-gray-100">
+                    <div class="flex justify-between px-4 py-3 bg-teal-50">
+                      <p class="text-sm font-bold text-gray-900">ราคาที่ต้องเสนอ</p>
+                      <p id="r-price-r" class="text-base font-black text-teal-700">—</p>
+                    </div>
+                    <div id="vat-row-r" class="hidden flex justify-between px-4 py-3">
+                      <p class="text-sm text-gray-600">+ VAT 7%</p>
+                      <p id="r-vat-r" class="text-sm font-semibold text-gray-900">—</p>
+                    </div>
+                    <div class="flex justify-between px-4 py-3">
+                      <p id="r-wht-label-r" class="text-sm text-gray-600">− หัก ณ ที่จ่าย 3%</p>
+                      <p id="r-wht-r" class="text-sm font-semibold text-red-600">—</p>
+                    </div>
+                    <div class="flex justify-between px-4 py-3 bg-green-50">
+                      <p class="text-sm font-bold text-gray-900">ยอดรับสุทธิ</p>
+                      <p id="r-net-r" class="text-base font-black text-green-700">—</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="rounded-xl bg-gray-50 border border-gray-200 p-3 text-xs text-gray-600 leading-relaxed mt-2">
+                  <span id="r-summary-r"></span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ad Slot -->
+    <div class="mt-8 flex min-h-[90px] items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 text-center text-xs text-gray-400">
+      <div><p class="font-medium">โฆษณา</p><p class="text-gray-300">728×90</p></div>
+    </div>
+
+    <!-- WHT Rate Table -->
+    <section class="mt-10">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">อัตราภาษีหัก ณ ที่จ่าย ประเภทงานต่างๆ</h2>
+      <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">ประเภทรายได้</th>
+              <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wide">อัตรา WHT</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide hidden sm:table-cell">ตัวอย่าง</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            {[
+              { type: 'ค่าบริการ / ค่าจ้างทำของ', rate: '3%', ex: 'ออกแบบกราฟิก, เขียน code, ถ่ายภาพ, แปลภาษา' },
+              { type: 'ค่าที่ปรึกษา / วิชาชีพ', rate: '3%', ex: 'ที่ปรึกษาธุรกิจ, นักบัญชี, ทนายความ' },
+              { type: 'ค่าโฆษณา', rate: '2%', ex: 'ค่าลง Google Ads, Facebook Ads ผ่านตัวแทน' },
+              { type: 'ค่าขนส่ง', rate: '1%', ex: 'ค่าขนส่งสินค้า, logistics' },
+              { type: 'ค่านายหน้า / ค่าเช่า', rate: '5%', ex: 'ค่านายหน้าประกัน, ค่าเช่าอาคาร' },
+            ].map(row => (
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-4 py-3 font-medium text-gray-900">{row.type}</td>
+                <td class="px-4 py-3 text-center font-bold text-teal-600">{row.rate}</td>
+                <td class="px-4 py-3 text-gray-500 hidden sm:table-cell">{row.ex}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-2 text-xs text-gray-500">* WHT หักจากค่าบริการ ไม่รวม VAT · ข้อมูลอาจมีการเปลี่ยนแปลง กรุณาตรวจสอบกับสรรพากร</p>
+    </section>
+
+    <!-- How to use -->
+    <section class="mt-10">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">วิธีใช้งาน คำนวณภาษีหัก ณ ที่จ่าย</h2>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { n: '1', t: 'เลือกโหมด', d: 'โหมดตรง: คำนวณว่าจะได้รับสุทธิเท่าไร โหมดย้อนกลับ: คำนวณว่าต้องเสนอราคาเท่าไร' },
+          { n: '2', t: 'ใส่จำนวนเงิน', d: 'ใส่ราคาค่าบริการ (โหมดตรง) หรือยอดที่ต้องการรับจริง (โหมดย้อนกลับ)' },
+          { n: '3', t: 'เลือก WHT rate', d: 'เลือกอัตราตามประเภทงาน ส่วนใหญ่ฟรีแลนซ์ไทยจะถูกหัก 3%' },
+          { n: '4', t: 'เปิด VAT หรือไม่', d: 'ถ้าคุณจดทะเบียน VAT ให้เปิดสวิตช์ VAT 7% ถ้าไม่ได้จดปิดไว้' },
+        ].map(s => (
+          <div class="flex gap-3">
+            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-100 text-sm font-bold text-teal-700">{s.n}</div>
+            <div>
+              <p class="font-semibold text-gray-900 text-sm">{s.t}</p>
+              <p class="text-xs text-gray-600 mt-0.5 leading-relaxed">{s.d}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Explainer -->
+    <section class="mt-10 rounded-2xl bg-teal-50 border border-teal-200 p-6">
+      <h2 class="text-lg font-bold text-gray-900 mb-3">ฟรีแลนซ์ควรรู้เรื่อง WHT + VAT</h2>
+      <div class="space-y-3 text-sm text-gray-700 leading-relaxed">
+        <p><strong>กรณีที่ 1 — ไม่จด VAT:</strong> เสนอราคา 10,000 บาท ลูกค้าหัก WHT 3% = 300 บาท โอนมาให้ 9,700 บาท คุณรับ 9,700 บาท</p>
+        <p><strong>กรณีที่ 2 — จด VAT:</strong> เสนอราคา 10,000 บาท + VAT 700 = ลูกค้าต้องจ่ายรวม 10,700 บาท แต่หัก WHT 300 บาท → โอนมา 10,400 บาท คุณรับ 10,400 บาท (แต่ต้องนำ VAT 700 ส่งสรรพากรเอง)</p>
+        <p><strong>เคล็ดลับ:</strong> ถ้าต้องการรับสุทธิ 10,000 บาท (ไม่จด VAT, WHT 3%) ต้องเสนอราคา = 10,000 ÷ 0.97 = 10,309.28 บาท ใช้โหมดย้อนกลับคำนวณได้เลย</p>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="mt-10">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">คำถามที่พบบ่อย (FAQ)</h2>
+      <div class="space-y-3">
+        {faqs.map(faq => (
+          <details class="group rounded-xl border border-gray-200 bg-white">
+            <summary class="flex cursor-pointer items-center justify-between px-5 py-4 text-sm font-semibold text-gray-900 list-none">
+              {faq.q}
+              <svg class="h-4 w-4 shrink-0 text-gray-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </summary>
+            <div class="border-t border-gray-100 px-5 py-4 text-sm text-gray-600 leading-relaxed">{faq.a}</div>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="mt-10">
+      <h2 class="text-lg font-bold text-gray-900 mb-3">เครื่องมืออื่นที่น่าสนใจ</h2>
+      <div class="flex flex-wrap gap-2">
+        <a href="/severance-calculator" class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 hover:border-teal-300 hover:text-teal-600 transition-colors"><Icon name="briefcase" class="h-4 w-4" /> คำนวณเงินชดเชยเลิกจ้าง</a>
+        <a href="/transfer-fee-calculator" class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 hover:border-teal-300 hover:text-teal-600 transition-colors"><Icon name="home" class="h-4 w-4" /> คำนวณค่าโอนบ้าน</a>
+        <a href="/ig-line-break" class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 hover:border-teal-300 hover:text-teal-600 transition-colors"><Icon name="camera" class="h-4 w-4" /> เว้นบรรทัดแคปชั่น IG</a>
+      </div>
+    </section>
+
+    <!-- Ad Slot -->
+    <div class="mt-8 flex min-h-[90px] items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 text-center text-xs text-gray-400">
+      <div><p class="font-medium">โฆษณา</p><p class="text-gray-300">336×280</p></div>
+    </div>
+
+  </div>
+</Layout>
+
+<script>
+  let calcMode: 'forward' | 'reverse' = 'forward';
+
+  const btnForward = document.getElementById('btn-forward')!;
+  const btnReverse = document.getElementById('btn-reverse')!;
+  const inputForward = document.getElementById('input-forward')!;
+  const inputReverse = document.getElementById('input-reverse')!;
+  const modeDesc = document.getElementById('mode-desc')!;
+  const resultsForward = document.getElementById('results-forward')!;
+  const resultsReverse = document.getElementById('results-reverse')!;
+
+  function setMode(mode: 'forward' | 'reverse') {
+    calcMode = mode;
+    const activeClass = 'flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-3 bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-sm font-semibold transition-colors';
+    const inactiveClass = 'flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-3 bg-white text-gray-600 hover:bg-gray-50 text-sm font-semibold transition-colors';
+
+    if (mode === 'forward') {
+      btnForward.className = activeClass;
+      btnReverse.className = inactiveClass;
+      inputForward.classList.remove('hidden');
+      inputReverse.classList.add('hidden');
+      modeDesc.textContent = 'โหมดตรง: ใส่ราคาที่คุณเสนอ → คำนวณว่าจะได้รับเงินสุทธิเท่าไร';
+    } else {
+      btnReverse.className = activeClass;
+      btnForward.className = inactiveClass;
+      inputReverse.classList.remove('hidden');
+      inputForward.classList.add('hidden');
+      modeDesc.textContent = 'โหมดย้อนกลับ: ใส่ยอดที่ต้องการรับจริง → คำนวณว่าต้องเสนอราคาเท่าไร';
+    }
+  }
+
+  btnForward.addEventListener('click', () => setMode('forward'));
+  btnReverse.addEventListener('click', () => setMode('reverse'));
+
+  function fmt(n: number): string {
+    return n.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function calculate() {
+    const rate = parseFloat((document.getElementById('wht-rate') as HTMLSelectElement).value) / 100;
+    const includeVat = (document.getElementById('include-vat') as HTMLInputElement).checked;
+    const vatRate = includeVat ? 0.07 : 0;
+
+    document.getElementById('results-placeholder')!.classList.add('hidden');
+    document.getElementById('results')!.classList.remove('hidden');
+
+    if (calcMode === 'forward') {
+      const price = parseFloat((document.getElementById('price-input') as HTMLInputElement).value) || 0;
+      if (!price) return;
+
+      const wht = price * rate;
+      const vat = price * vatRate;
+      const net = price + vat - wht;
+
+      resultsForward.classList.remove('hidden');
+      resultsReverse.classList.add('hidden');
+
+      document.getElementById('r-price')!.textContent = `${fmt(price)} บาท`;
+      document.getElementById('r-wht-label')!.textContent = `− หัก ณ ที่จ่าย ${rate * 100}%`;
+      document.getElementById('r-wht')!.textContent = `−${fmt(wht)} บาท`;
+      document.getElementById('r-net')!.textContent = `${fmt(net)} บาท`;
+
+      const vatRowF = document.getElementById('vat-row-f')!;
+      if (includeVat) {
+        vatRowF.classList.remove('hidden');
+        document.getElementById('r-vat')!.textContent = `+${fmt(vat)} บาท`;
+      } else {
+        vatRowF.classList.add('hidden');
+      }
+
+      document.getElementById('r-summary')!.textContent =
+        `เสนอราคา ${fmt(price)} บาท → ${includeVat ? `ลูกค้าจ่ายรวม ${fmt(price + vat)} บาท (รวม VAT) → ` : ''}หัก WHT ${fmt(wht)} บาท → คุณรับสุทธิ ${fmt(net)} บาท`;
+
+    } else {
+      const targetNet = parseFloat((document.getElementById('net-input') as HTMLInputElement).value) || 0;
+      if (!targetNet) return;
+
+      const price = targetNet / (1 + vatRate - rate);
+      const wht = price * rate;
+      const vat = price * vatRate;
+      const net = price + vat - wht;
+
+      resultsReverse.classList.remove('hidden');
+      resultsForward.classList.add('hidden');
+
+      document.getElementById('r-price-r')!.textContent = `${fmt(price)} บาท`;
+      document.getElementById('r-wht-label-r')!.textContent = `− หัก ณ ที่จ่าย ${rate * 100}%`;
+      document.getElementById('r-wht-r')!.textContent = `−${fmt(wht)} บาท`;
+      document.getElementById('r-net-r')!.textContent = `${fmt(net)} บาท`;
+
+      const vatRowR = document.getElementById('vat-row-r')!;
+      if (includeVat) {
+        vatRowR.classList.remove('hidden');
+        document.getElementById('r-vat-r')!.textContent = `+${fmt(vat)} บาท`;
+      } else {
+        vatRowR.classList.add('hidden');
+      }
+
+      document.getElementById('r-summary-r')!.textContent =
+        `ต้องเสนอราคา ${fmt(price)} บาท${includeVat ? ` + VAT ${fmt(vat)} บาท` : ''} → ลูกค้าหัก WHT ${fmt(wht)} บาท → คุณรับสุทธิ ${fmt(net)} บาท`;
+    }
+  }
+
+  document.getElementById('calc-btn')!.addEventListener('click', calculate);
+  document.getElementById('wht-rate')!.addEventListener('change', calculate);
+  document.getElementById('include-vat')!.addEventListener('change', calculate);
+
+  ['price-input', 'net-input'].forEach(id => {
+    document.getElementById(id)!.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Enter') calculate();
+    });
+    document.getElementById(id)!.addEventListener('input', calculate);
+  });
+</script>

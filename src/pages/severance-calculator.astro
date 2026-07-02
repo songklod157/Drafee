@@ -1,0 +1,403 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+
+const faqs = [
+  {
+    q: 'เงินชดเชยคำนวณจากเงินเดือนอย่างไร?',
+    a: 'เงินชดเชยคำนวณจาก "ค่าจ้างสุดท้าย" หรือค่าจ้างเฉลี่ย 90 วันสุดท้าย โดยคิดเป็นรายวัน (เงินเดือน ÷ 30) แล้วคูณด้วยจำนวนวันชดเชยตามอายุงาน'
+  },
+  {
+    q: 'ลาออกเองได้เงินชดเชยไหม?',
+    a: 'ไม่ได้รับ การลาออกเองไม่มีสิทธิรับเงินชดเชยตาม ม.118 เงินชดเชยจะได้รับเฉพาะกรณี "นายจ้างเลิกจ้าง" เท่านั้น อย่างไรก็ตามถ้าลาออกยังได้รับเงินว่างงานประกันสังคม 30% (สูงสุด 90 วัน)'
+  },
+  {
+    q: 'อายุงานเริ่มนับจากวันไหน?',
+    a: 'นับจากวันที่เริ่มทำงานกับนายจ้างคนปัจจุบัน ถึงวันที่นายจ้างบอกเลิกจ้าง ถ้าเคยโอนย้ายหรือเปลี่ยนบริษัทในกลุ่มเดียวกัน อาจนับต่อเนื่องได้ขึ้นอยู่กับสัญญาจ้าง'
+  },
+  {
+    q: 'นายจ้างไม่จ่ายเงินชดเชย ทำอย่างไร?',
+    a: 'ยื่นเรื่องร้องเรียนที่กรมสวัสดิการและคุ้มครองแรงงาน (กสร.) หรือโทร 1546 ภายใน 2 ปีนับจากวันที่นายจ้างเลิกจ้าง หากนายจ้างจงใจไม่จ่ายอาจต้องชำระดอกเบี้ย 15% ต่อปีด้วย'
+  },
+  {
+    q: 'เงินชดเชยได้รับยกเว้นภาษีไหม?',
+    a: 'เงินชดเชยที่ได้รับยกเว้นภาษีเงินได้บุคคลธรรมดาคือส่วนที่ไม่เกิน 300,000 บาท และส่วนที่เกิน 300,000 บาท แต่ไม่เกิน 600,000 บาท ได้รับยกเว้นเพิ่มอีก (เงื่อนไขเพิ่มเติมตามกฎกระทรวง) แนะนำปรึกษานักบัญชีหรือสรรพากร'
+  },
+  {
+    q: 'ประกันสังคมจ่ายว่างงานเท่าไร นานแค่ไหน?',
+    a: 'กรณีถูกเลิกจ้าง: ได้รับ 50% ของค่าจ้างเฉลี่ย (ฐานสูงสุด 15,000 บาท/เดือน) นานสูงสุด 180 วัน/ปี กรณีลาออกเอง: ได้รับ 30% ของค่าจ้างเฉลี่ย นานสูงสุด 90 วัน/ปี ต้องส่งประกันสังคมครบ 6 เดือนในรอบ 15 เดือนก่อนว่างงาน'
+  },
+];
+
+const schema = JSON.stringify([
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "คำนวณเงินชดเชยเลิกจ้างออนไลน์ฟรี",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web Browser",
+    "url": "https://drafee.com/severance-calculator",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "THB" },
+    "description": "คำนวณเงินชดเชยเลิกจ้างตาม พ.ร.บ.คุ้มครองแรงงาน มาตรา 118 พร้อมเงินว่างงานประกันสังคม",
+    "inLanguage": "th"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(f => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": { "@type": "Answer", "text": f.a }
+    }))
+  }
+]);
+
+const severanceTable = [
+  { min: 120, max: 365, label: '120 วัน – 1 ปี', days: 30 },
+  { min: 365, max: 1095, label: '1 ปี – 3 ปี', days: 90 },
+  { min: 1095, max: 2190, label: '3 ปี – 6 ปี', days: 180 },
+  { min: 2190, max: 3650, label: '6 ปี – 10 ปี', days: 240 },
+  { min: 3650, max: 7300, label: '10 ปี – 20 ปี', days: 300 },
+  { min: 7300, max: Infinity, label: '20 ปีขึ้นไป', days: 400 },
+];
+---
+
+<Layout
+  title="คำนวณเงินชดเชยเลิกจ้างออนไลน์ฟรี พ.ร.บ.คุ้มครองแรงงาน ม.118 | Drafee"
+  description="คำนวณเงินชดเชยเลิกจ้างตาม พ.ร.บ.คุ้มครองแรงงาน มาตรา 118 ใส่วันเริ่มงานและเงินเดือนสุดท้าย ได้ผลทันที พร้อมเงินว่างงานประกันสังคม"
+  schemaJson={schema}
+>
+
+  <!-- Hero -->
+  <div class="bg-gradient-to-b from-teal-50 via-cyan-50 to-white pt-10 pb-6">
+    <div class="mx-auto max-w-4xl px-4">
+      <div class="mb-2 text-sm text-teal-600 font-medium">เครื่องมือการเงิน</div>
+      <h1 class="text-2xl font-extrabold text-gray-900 sm:text-3xl">คำนวณเงินชดเชยเลิกจ้างตาม พ.ร.บ.คุ้มครองแรงงาน</h1>
+      <p class="mt-2 text-gray-600 text-sm leading-relaxed">
+        มาตรา 118 · พร้อมเงินว่างงานประกันสังคม · ฟรี ไม่ต้องสมัครสมาชิก
+      </p>
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-4xl px-4 pb-12">
+
+    <!-- Tool Card -->
+    <div class="mt-6 rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+      <div class="p-5 sm:p-6">
+        <div class="grid gap-5 sm:grid-cols-2">
+
+          <!-- Input -->
+          <div class="space-y-4">
+            <!-- Input mode toggle -->
+            <div class="flex rounded-xl border border-gray-200 overflow-hidden text-sm font-medium">
+              <button id="btn-date" class="flex-1 py-2 bg-gradient-to-r from-teal-500 to-cyan-500 text-white transition-colors text-xs">ระบุวันเริ่มงาน</button>
+              <button id="btn-duration" class="flex-1 py-2 bg-white text-gray-600 hover:bg-gray-50 transition-colors text-xs">ระบุอายุงาน</button>
+            </div>
+
+            <!-- Date mode -->
+            <div id="date-mode">
+              <label for="start-date" class="block text-sm font-semibold text-gray-700 mb-1.5">วันที่เริ่มงาน</label>
+              <input
+                type="date"
+                id="start-date"
+                class="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-teal-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-100 transition-colors"
+              />
+              <p class="mt-1 text-xs text-gray-400">ระบบจะคำนวณอายุงานจนถึงวันนี้</p>
+            </div>
+
+            <!-- Duration mode -->
+            <div id="duration-mode" class="hidden">
+              <p class="text-sm font-semibold text-gray-700 mb-1.5">อายุงาน</p>
+              <div class="grid grid-cols-3 gap-2">
+                <div>
+                  <label for="years" class="text-xs text-gray-500 block mb-1">ปี</label>
+                  <input type="number" id="years" min="0" max="50" value="0" class="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-teal-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-100" />
+                </div>
+                <div>
+                  <label for="months" class="text-xs text-gray-500 block mb-1">เดือน</label>
+                  <input type="number" id="months" min="0" max="11" value="0" class="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-teal-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-100" />
+                </div>
+                <div>
+                  <label for="days-input" class="text-xs text-gray-500 block mb-1">วัน</label>
+                  <input type="number" id="days-input" min="0" max="30" value="0" class="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-teal-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-100" />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label for="salary" class="block text-sm font-semibold text-gray-700 mb-1.5">
+                เงินเดือนสุดท้าย (บาท/เดือน)
+              </label>
+              <div class="relative">
+                <input
+                  type="number"
+                  id="salary"
+                  placeholder="เช่น 25000"
+                  min="0"
+                  class="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-3 pr-16 text-sm text-gray-900 placeholder-gray-400 focus:border-teal-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-100 transition-colors"
+                />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">บาท</span>
+              </div>
+            </div>
+
+            <button
+              id="calc-btn"
+              class="w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 px-4 py-3 text-sm font-bold text-white hover:from-teal-600 hover:to-cyan-600 transition-colors"
+            >
+              <Icon name="briefcase" class="h-4 w-4" /> คำนวณเงินชดเชย
+            </button>
+          </div>
+
+          <!-- Results -->
+          <div>
+            <div id="results-placeholder" class="flex h-full min-h-[300px] items-center justify-center rounded-xl border-2 border-dashed border-gray-200 text-center text-sm text-gray-400">
+              <div>
+                <Icon name="briefcase" class="h-10 w-10 mx-auto mb-2 text-gray-300" />
+                <p>กรอกวันเริ่มงานและ<br/>เงินเดือนแล้วกด "คำนวณ"</p>
+              </div>
+            </div>
+
+            <div id="results" class="hidden space-y-3">
+
+              <div id="no-entitle" class="hidden rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                <p class="font-bold inline-flex items-center gap-1.5"><Icon name="warning" class="h-4 w-4 shrink-0" /> ยังไม่มีสิทธิรับเงินชดเชย</p>
+                <p class="mt-1 text-xs leading-relaxed">อายุงานต้องครบ 120 วัน (4 เดือน) ขึ้นไปจึงจะได้รับเงินชดเชย</p>
+              </div>
+
+              <div id="main-result" class="hidden">
+                <!-- Work period -->
+                <div class="rounded-xl bg-teal-50 border border-teal-200 p-4 mb-3">
+                  <div class="grid grid-cols-2 gap-3 text-center">
+                    <div>
+                      <p class="text-xs text-gray-500 mb-0.5">อายุงาน</p>
+                      <p id="r-period" class="text-base font-bold text-gray-900">—</p>
+                    </div>
+                    <div>
+                      <p class="text-xs text-gray-500 mb-0.5">วันชดเชย</p>
+                      <p id="r-days" class="text-base font-bold text-teal-700">—</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Severance amount -->
+                <div class="rounded-xl bg-gray-900 p-4 text-center mb-3">
+                  <p class="text-xs text-gray-400 mb-1">เงินชดเชยตาม ม.118</p>
+                  <p id="r-amount" class="text-2xl font-black text-white">—</p>
+                  <p class="text-xs text-gray-500 mt-1" id="r-calc-detail">—</p>
+                </div>
+
+                <!-- Social Security -->
+                <div class="rounded-xl border border-gray-200 bg-white overflow-hidden">
+                  <div class="bg-gray-50 px-4 py-2.5 border-b border-gray-100">
+                    <p class="text-xs font-bold text-gray-600 uppercase tracking-wide">เงินว่างงานประกันสังคม (โดยประมาณ)</p>
+                  </div>
+                  <div class="divide-y divide-gray-100">
+                    <div class="flex items-center justify-between px-4 py-3">
+                      <div>
+                        <p class="text-sm font-medium text-gray-900">กรณีถูกเลิกจ้าง</p>
+                        <p class="text-xs text-gray-500">50% ของค่าจ้าง · สูงสุด 180 วัน/ปี</p>
+                      </div>
+                      <p id="r-ss-dismissed" class="text-sm font-bold text-gray-900 text-right">—</p>
+                    </div>
+                    <div class="flex items-center justify-between px-4 py-3">
+                      <div>
+                        <p class="text-sm font-medium text-gray-900">กรณีลาออกเอง</p>
+                        <p class="text-xs text-gray-500">30% ของค่าจ้าง · สูงสุด 90 วัน/ปี</p>
+                      </div>
+                      <p id="r-ss-resigned" class="text-sm font-bold text-gray-900 text-right">—</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="rounded-xl border border-blue-200 bg-blue-50 p-3 text-xs text-blue-700 leading-relaxed mt-3">
+                  <strong>หมายเหตุ:</strong> เงินว่างงานประกันสังคมคิดจากฐานเงินเดือนสูงสุด 15,000 บาท/เดือน และต้องส่งประกันสังคมครบ 6 เดือนใน 15 เดือนก่อนว่างงาน ค่าที่แสดงเป็นการประมาณการ
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ad Slot -->
+    <div class="mt-8 flex min-h-[90px] items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 text-center text-xs text-gray-400">
+      <div><p class="font-medium">โฆษณา</p><p class="text-gray-300">728×90</p></div>
+    </div>
+
+    <!-- Severance Table -->
+    <section class="mt-10">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">ตารางเงินชดเชยตาม มาตรา 118 พ.ร.บ.คุ้มครองแรงงาน</h2>
+      <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">อายุงาน</th>
+              <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wide">วันชดเชย</th>
+              <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wide hidden sm:table-cell">ตัวอย่าง (เงินเดือน 30,000 บ.)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            {severanceTable.map(row => (
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-4 py-3 font-medium text-gray-900">{row.label}</td>
+                <td class="px-4 py-3 text-right font-bold text-teal-600">{row.days} วัน</td>
+                <td class="px-4 py-3 text-right text-gray-500 hidden sm:table-cell">{(30000 / 30 * row.days).toLocaleString('th-TH', { minimumFractionDigits: 0 })} บาท</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-2 text-xs text-gray-500">* วันชดเชย = จำนวนวัน × (เงินเดือน ÷ 30) = อัตราค่าจ้างรายวัน</p>
+    </section>
+
+    <!-- How to use -->
+    <section class="mt-10">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">วิธีใช้งาน คำนวณเงินชดเชย</h2>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { n: '1', t: 'เลือกวิธีระบุอายุงาน', d: 'ระบุวันเริ่มงาน (ระบบคำนวณถึงวันนี้) หรือกรอกอายุงานเป็นปี/เดือน/วันโดยตรง' },
+          { n: '2', t: 'ใส่เงินเดือน', d: 'กรอกเงินเดือนสุดท้าย หรือค่าเฉลี่ย 3 เดือนสุดท้าย (แล้วแต่ว่าอย่างไหนสูงกว่า)' },
+          { n: '3', t: 'กดคำนวณ', d: 'ระบบแสดงจำนวนวันชดเชยตาม ม.118 และยอดเงินชดเชยทั้งหมด' },
+          { n: '4', t: 'ดูเงินว่างงาน', d: 'ดูประมาณการเงินว่างงานประกันสังคมทั้งกรณีถูกเลิกจ้างและลาออกเอง' },
+        ].map(s => (
+          <div class="flex gap-3">
+            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-100 text-sm font-bold text-teal-700">{s.n}</div>
+            <div>
+              <p class="font-semibold text-gray-900 text-sm">{s.t}</p>
+              <p class="text-xs text-gray-600 mt-0.5 leading-relaxed">{s.d}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="mt-10">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">คำถามที่พบบ่อย (FAQ)</h2>
+      <div class="space-y-3">
+        {faqs.map(faq => (
+          <details class="group rounded-xl border border-gray-200 bg-white">
+            <summary class="flex cursor-pointer items-center justify-between px-5 py-4 text-sm font-semibold text-gray-900 list-none">
+              {faq.q}
+              <svg class="h-4 w-4 shrink-0 text-gray-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </summary>
+            <div class="border-t border-gray-100 px-5 py-4 text-sm text-gray-600 leading-relaxed">{faq.a}</div>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="mt-10">
+      <h2 class="text-lg font-bold text-gray-900 mb-3">เครื่องมืออื่นที่น่าสนใจ</h2>
+      <div class="flex flex-wrap gap-2">
+        <a href="/transfer-fee-calculator" class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 hover:border-teal-300 hover:text-teal-600 transition-colors"><Icon name="home" class="h-4 w-4" /> คำนวณค่าโอนบ้าน</a>
+        <a href="/withholding-tax-calculator" class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 hover:border-teal-300 hover:text-teal-600 transition-colors"><Icon name="calculator" class="h-4 w-4" /> คำนวณภาษีหัก ณ ที่จ่าย</a>
+        <a href="/character-counter" class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 hover:border-teal-300 hover:text-teal-600 transition-colors"><Icon name="hashtag" class="h-4 w-4" /> นับตัวอักษร</a>
+      </div>
+    </section>
+
+    <!-- Ad Slot -->
+    <div class="mt-8 flex min-h-[90px] items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 text-center text-xs text-gray-400">
+      <div><p class="font-medium">โฆษณา</p><p class="text-gray-300">336×280</p></div>
+    </div>
+
+  </div>
+</Layout>
+
+<script>
+  let inputMode: 'date' | 'duration' = 'date';
+
+  const btnDate = document.getElementById('btn-date')!;
+  const btnDuration = document.getElementById('btn-duration')!;
+  const dateMode = document.getElementById('date-mode')!;
+  const durationMode = document.getElementById('duration-mode')!;
+
+  function setMode(mode: 'date' | 'duration') {
+    inputMode = mode;
+    if (mode === 'date') {
+      btnDate.className = 'flex-1 py-2 bg-gradient-to-r from-teal-500 to-cyan-500 text-white transition-colors text-xs';
+      btnDuration.className = 'flex-1 py-2 bg-white text-gray-600 hover:bg-gray-50 transition-colors text-xs';
+      dateMode.classList.remove('hidden');
+      durationMode.classList.add('hidden');
+    } else {
+      btnDuration.className = 'flex-1 py-2 bg-gradient-to-r from-teal-500 to-cyan-500 text-white transition-colors text-xs';
+      btnDate.className = 'flex-1 py-2 bg-white text-gray-600 hover:bg-gray-50 transition-colors text-xs';
+      durationMode.classList.remove('hidden');
+      dateMode.classList.add('hidden');
+    }
+  }
+
+  btnDate.addEventListener('click', () => setMode('date'));
+  btnDuration.addEventListener('click', () => setMode('duration'));
+
+  function fmt(n: number): string {
+    return n.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function getSeveranceDays(totalDays: number): number {
+    if (totalDays < 120) return 0;
+    const years = totalDays / 365.25;
+    if (years < 1) return 30;
+    if (years < 3) return 90;
+    if (years < 6) return 180;
+    if (years < 10) return 240;
+    if (years < 20) return 300;
+    return 400;
+  }
+
+  function calculate() {
+    const salary = parseFloat((document.getElementById('salary') as HTMLInputElement).value) || 0;
+    if (!salary) { alert('กรุณาใส่เงินเดือน'); return; }
+
+    let totalDays: number;
+    let periodLabel: string;
+
+    if (inputMode === 'date') {
+      const startDateStr = (document.getElementById('start-date') as HTMLInputElement).value;
+      if (!startDateStr) { alert('กรุณาเลือกวันที่เริ่มงาน'); return; }
+      const startDate = new Date(startDateStr);
+      const today = new Date();
+      totalDays = Math.floor((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+      const years = Math.floor(totalDays / 365);
+      const months = Math.floor((totalDays % 365) / 30);
+      const days = totalDays % 30;
+      periodLabel = `${years > 0 ? years + ' ปี ' : ''}${months > 0 ? months + ' เดือน ' : ''}${days} วัน`;
+    } else {
+      const years = parseInt((document.getElementById('years') as HTMLInputElement).value) || 0;
+      const months = parseInt((document.getElementById('months') as HTMLInputElement).value) || 0;
+      const days = parseInt((document.getElementById('days-input') as HTMLInputElement).value) || 0;
+      totalDays = years * 365 + months * 30 + days;
+      periodLabel = `${years > 0 ? years + ' ปี ' : ''}${months > 0 ? months + ' เดือน ' : ''}${days > 0 ? days + ' วัน' : ''}`.trim() || '0 วัน';
+    }
+
+    const sevDays = getSeveranceDays(totalDays);
+    const dailyRate = salary / 30;
+    const sevAmount = dailyRate * sevDays;
+
+    const ssBase = Math.min(salary, 15000);
+    const ssDismissed = ssBase * 0.50;
+    const ssResigned = ssBase * 0.30;
+
+    document.getElementById('results-placeholder')!.classList.add('hidden');
+    document.getElementById('results')!.classList.remove('hidden');
+
+    if (sevDays === 0) {
+      document.getElementById('no-entitle')!.classList.remove('hidden');
+      document.getElementById('main-result')!.classList.add('hidden');
+    } else {
+      document.getElementById('no-entitle')!.classList.add('hidden');
+      document.getElementById('main-result')!.classList.remove('hidden');
+      document.getElementById('r-period')!.textContent = periodLabel;
+      document.getElementById('r-days')!.textContent = `${sevDays} วัน`;
+      document.getElementById('r-amount')!.textContent = `${fmt(sevAmount)} บาท`;
+      document.getElementById('r-calc-detail')!.textContent = `${fmt(dailyRate)} บาท/วัน × ${sevDays} วัน`;
+      document.getElementById('r-ss-dismissed')!.textContent = `${fmt(ssDismissed)} บาท/เดือน`;
+      document.getElementById('r-ss-resigned')!.textContent = `${fmt(ssResigned)} บาท/เดือน`;
+    }
+  }
+
+  document.getElementById('calc-btn')!.addEventListener('click', calculate);
+</script>

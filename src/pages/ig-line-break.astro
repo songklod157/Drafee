@@ -1,0 +1,325 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+
+const faqs = [
+  {
+    q: 'เว้นบรรทัด Instagram ทำยังไง?',
+    a: 'Instagram จะลบบรรทัดว่างออกโดยอัตโนมัติเมื่อโพสต์ วิธีแก้คือใส่ตัวอักษรพิเศษ "Braille blank space" (U+2800) ในบรรทัดว่าง ซึ่งมองไม่เห็นด้วยตาเปล่าแต่ IG จะไม่ลบออก เครื่องมือนี้ทำให้อัตโนมัติ'
+  },
+  {
+    q: 'Invisible character คืออะไร? ปลอดภัยไหม?',
+    a: 'Invisible character ที่ใช้คือ Unicode U+2800 (Braille Pattern Blank) เป็นช่องว่างพิเศษที่ Instagram อนุญาตให้ใช้งาน ไม่มีอันตราย ปัจจุบันคอนเทนต์ครีเอเตอร์ทั่วโลกใช้กันอย่างแพร่หลาย'
+  },
+  {
+    q: 'ใช้กับ TikTok หรือแพลตฟอร์มอื่นได้ไหม?',
+    a: 'ตัวอักษรเดียวกันสามารถใช้กับ TikTok และ Facebook ได้เช่นกัน แต่ผลลัพธ์อาจแตกต่างกัน แนะนำทดสอบก่อนโพสต์จริง'
+  },
+  {
+    q: 'แคปชั่น Instagram มีตัวอักษรได้กี่ตัว?',
+    a: 'Instagram caption จำกัดที่ 2,200 ตัวอักษร และ hashtag สูงสุด 30 อัน เครื่องมือนี้แสดงจำนวนตัวอักษรให้เห็นแบบ real-time'
+  },
+  {
+    q: 'ข้อมูลที่พิมพ์จะถูกเก็บไว้ที่ไหน?',
+    a: 'ไม่มีการส่งข้อมูลออกไปยังเซิร์ฟเวอร์ใดๆ ทุกอย่างประมวลผลบน browser ของคุณเองทั้งหมด ข้อมูลหายไปเมื่อปิดหน้าต่าง'
+  },
+  {
+    q: 'ทำไม copy แล้วแปะใน IG แล้วบรรทัดว่างหายอยู่?',
+    a: 'ตรวจสอบว่าคุณ copy จากช่อง "ผลลัพธ์" ไม่ใช่ช่อง "ต้นฉบับ" หากยังไม่ได้ผล ลองใช้ IG บนมือถือแทน web เนื่องจากบางเวอร์ชัน IG desktop อาจแสดงผลต่างกัน'
+  },
+];
+
+const schema = JSON.stringify([
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "เว้นบรรทัดแคปชั่น Instagram ออนไลน์ฟรี",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web Browser",
+    "url": "https://drafee.com/ig-line-break",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "THB" },
+    "description": "เครื่องมือเว้นบรรทัดแคปชั่น Instagram ฟรี แทรก invisible character ทำให้แคปชั่น IG มีช่องว่างระหว่างย่อหน้า",
+    "inLanguage": "th"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(f => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": { "@type": "Answer", "text": f.a }
+    }))
+  }
+]);
+---
+
+<Layout
+  title="เว้นบรรทัด IG ออนไลน์ฟรี แคปชั่น Instagram | Drafee"
+  description="เครื่องมือเว้นบรรทัดแคปชั่น Instagram ฟรี แทรก invisible character ให้แคปชั่น IG มีบรรทัดว่างได้จริง คัดลอกง่าย นับตัวอักษร 2200 พร้อมพรีวิว"
+  schemaJson={schema}
+>
+
+  <!-- Hero -->
+  <div class="bg-gradient-to-b from-teal-50 via-cyan-50 to-white pt-10 pb-6">
+    <div class="mx-auto max-w-4xl px-4">
+      <div class="mb-2 text-sm text-teal-600 font-medium">เครื่องมือครีเอเตอร์</div>
+      <h1 class="text-2xl font-extrabold text-gray-900 sm:text-3xl">เว้นบรรทัดแคปชั่น Instagram ออนไลน์</h1>
+      <p class="mt-2 text-gray-600 text-sm leading-relaxed">
+        แทรก invisible character (U+2800) ในบรรทัดว่าง ทำให้แคปชั่น IG เว้นบรรทัดได้จริง · ฟรี ไม่ต้องสมัครสมาชิก
+      </p>
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-4xl px-4 pb-12">
+
+    <!-- Tool Card -->
+    <div class="mt-6 rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+      <div class="grid gap-0 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200">
+
+        <!-- Input -->
+        <div class="p-5">
+          <div class="mb-2 flex items-center justify-between">
+            <label for="caption-input" class="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-700"><Icon name="pencil" class="h-4 w-4" /> ต้นฉบับ</label>
+            <span id="input-count" class="text-xs text-gray-400">0 / 2,200</span>
+          </div>
+          <textarea
+            id="caption-input"
+            placeholder="วางแคปชั่นของคุณที่นี่&#10;&#10;บรรทัดว่างจะถูกแปลงเป็น invisible character&#10;&#10;ลองพิมพ์หรือวางข้อความได้เลย"
+            rows="12"
+            class="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm text-gray-900 placeholder-gray-400 focus:border-teal-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-100 transition-colors"
+          ></textarea>
+          <button
+            id="process-btn"
+            class="mt-3 w-full rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 px-4 py-2.5 text-sm font-semibold text-white hover:from-teal-600 hover:to-cyan-600 transition-all shadow-sm"
+          >
+            <span class="inline-flex items-center gap-1.5"><Icon name="sparkles" class="h-4 w-4" /> แปลงแคปชั่น</span>
+          </button>
+        </div>
+
+        <!-- Output -->
+        <div class="p-5">
+          <div class="mb-2 flex items-center justify-between">
+            <label for="caption-output" class="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-700"><Icon name="clipboard" class="h-4 w-4" /> ผลลัพธ์ (พร้อมคัดลอก)</label>
+            <span id="output-count" class="text-xs text-gray-400">0 / 2,200</span>
+          </div>
+          <textarea
+            id="caption-output"
+            readonly
+            placeholder="ผลลัพธ์จะแสดงที่นี่..."
+            rows="12"
+            class="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-100 transition-colors cursor-default"
+          ></textarea>
+          <button
+            id="copy-btn"
+            class="mt-3 w-full rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-gray-800 active:bg-gray-700 transition-colors"
+          >
+            <span class="inline-flex items-center gap-1.5"><Icon name="clipboard" class="h-4 w-4" /><span id="copy-btn-text">คัดลอกผลลัพธ์</span></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Status Bar -->
+      <div id="status-bar" class="hidden border-t border-gray-100 bg-green-50 px-5 py-2.5">
+        <p id="status-msg" class="text-sm text-green-700 font-medium text-center"></p>
+      </div>
+
+      <!-- Char count bar -->
+      <div class="border-t border-gray-100 px-5 py-3 bg-gray-50">
+        <div class="flex items-center justify-between text-xs text-gray-500 mb-1.5">
+          <span>ตัวอักษร</span>
+          <span id="bar-label">0 / 2,200</span>
+        </div>
+        <div class="h-1.5 rounded-full bg-gray-200 overflow-hidden">
+          <div id="char-bar" class="h-full rounded-full bg-teal-500 transition-all duration-300" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IG Preview -->
+    <div class="mt-6 rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+      <div class="border-b border-gray-100 px-5 py-3 flex items-center gap-2">
+        <div class="h-7 w-7 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600"></div>
+        <div>
+          <p class="text-xs font-semibold text-gray-900">your.account</p>
+          <p class="text-[10px] text-gray-500">Instagram Caption Preview</p>
+        </div>
+      </div>
+      <div class="bg-gray-100 w-full h-48 flex items-center justify-center">
+        <Icon name="photo" class="h-14 w-14 text-gray-300" />
+      </div>
+      <div class="px-5 py-4">
+        <div id="ig-preview" class="text-sm text-gray-900 leading-relaxed whitespace-pre-wrap break-words">
+          <span class="text-gray-400 text-xs">พรีวิวแคปชั่นจะแสดงที่นี่หลังแปลง...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ad Slot -->
+    <div class="mt-8 flex min-h-[90px] items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 text-center text-xs text-gray-400">
+      <div><p class="font-medium">โฆษณา</p><p class="text-gray-300">728×90</p></div>
+    </div>
+
+    <!-- How to use -->
+    <section class="mt-10">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">วิธีใช้งาน เว้นบรรทัด IG</h2>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { n: '1', t: 'วางแคปชั่น', d: 'คัดลอกแคปชั่นที่ต้องการจาก notes หรือพิมพ์ตรงๆ ในช่องต้นฉบับ' },
+          { n: '2', t: 'กดแปลง', d: 'กดปุ่ม "แปลงแคปชั่น" บรรทัดว่างจะถูกแทนด้วย invisible character อัตโนมัติ' },
+          { n: '3', t: 'ตรวจพรีวิว', d: 'ดูพรีวิวว่าแคปชั่นมีบรรทัดว่างที่ต้องการหรือไม่ก่อนคัดลอก' },
+          { n: '4', t: 'คัดลอกและโพสต์', d: 'กด "คัดลอกผลลัพธ์" แล้วแปะใน Instagram ได้เลย' },
+        ].map(s => (
+          <div class="flex gap-3">
+            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-100 text-sm font-bold text-teal-700">{s.n}</div>
+            <div>
+              <p class="font-semibold text-gray-900 text-sm">{s.t}</p>
+              <p class="text-xs text-gray-600 mt-0.5 leading-relaxed">{s.d}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="mt-10">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">คำถามที่พบบ่อย (FAQ)</h2>
+      <div class="space-y-3">
+        {faqs.map(faq => (
+          <details class="group rounded-xl border border-gray-200 bg-white">
+            <summary class="flex cursor-pointer items-center justify-between px-5 py-4 text-sm font-semibold text-gray-900 list-none">
+              {faq.q}
+              <svg class="h-4 w-4 shrink-0 text-gray-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </summary>
+            <div class="border-t border-gray-100 px-5 py-4 text-sm text-gray-600 leading-relaxed">{faq.a}</div>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="mt-10">
+      <h2 class="text-lg font-bold text-gray-900 mb-3">เครื่องมืออื่นที่น่าสนใจ</h2>
+      <div class="flex flex-wrap gap-2">
+        <a href="/character-counter" class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 hover:border-teal-300 hover:text-teal-600 transition-colors"><Icon name="hashtag" class="h-4 w-4" /> นับตัวอักษรทุกแพลตฟอร์ม</a>
+        <a href="/withholding-tax-calculator" class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 hover:border-teal-300 hover:text-teal-600 transition-colors"><Icon name="calculator" class="h-4 w-4" /> คำนวณภาษีหัก ณ ที่จ่าย</a>
+        <a href="/severance-calculator" class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 hover:border-teal-300 hover:text-teal-600 transition-colors"><Icon name="briefcase" class="h-4 w-4" /> คำนวณเงินชดเชย</a>
+      </div>
+    </section>
+
+    <!-- Ad Slot -->
+    <div class="mt-8 flex min-h-[90px] items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 text-center text-xs text-gray-400">
+      <div><p class="font-medium">โฆษณา</p><p class="text-gray-300">336×280</p></div>
+    </div>
+
+  </div>
+
+</Layout>
+
+<script>
+  const INVISIBLE = '⠀';
+
+  const inputEl = document.getElementById('caption-input') as HTMLTextAreaElement;
+  const outputEl = document.getElementById('caption-output') as HTMLTextAreaElement;
+  const processBtn = document.getElementById('process-btn')!;
+  const copyBtn = document.getElementById('copy-btn')!;
+  const inputCount = document.getElementById('input-count')!;
+  const outputCount = document.getElementById('output-count')!;
+  const barLabel = document.getElementById('bar-label')!;
+  const charBar = document.getElementById('char-bar') as HTMLElement;
+  const igPreview = document.getElementById('ig-preview')!;
+  const statusBar = document.getElementById('status-bar')!;
+  const statusMsg = document.getElementById('status-msg')!;
+
+  function charLen(s: string) {
+    return [...s].length;
+  }
+
+  function updateInputCount() {
+    const n = charLen(inputEl.value);
+    inputCount.textContent = `${n.toLocaleString('th')} / 2,200`;
+    inputCount.className = n > 2200 ? 'text-xs text-red-500 font-semibold' : 'text-xs text-gray-400';
+  }
+
+  function updateOutputCount(text: string) {
+    const n = charLen(text);
+    outputCount.textContent = `${n.toLocaleString('th')} / 2,200`;
+    outputCount.className = n > 2200 ? 'text-xs text-red-500 font-semibold' : 'text-xs text-gray-400';
+    barLabel.textContent = `${n.toLocaleString('th')} / 2,200`;
+    const pct = Math.min((n / 2200) * 100, 100);
+    charBar.style.width = `${pct}%`;
+    charBar.className = `h-full rounded-full transition-all duration-300 ${n > 2200 ? 'bg-red-500' : n > 1800 ? 'bg-yellow-500' : 'bg-teal-500'}`;
+  }
+
+  function processCaption() {
+    const raw = inputEl.value;
+    if (!raw.trim()) return;
+
+    const lines = raw.split('\n');
+    const processed = lines.map(line => line.trim() === '' ? INVISIBLE : line);
+    const result = processed.join('\n');
+
+    outputEl.value = result;
+    updateOutputCount(result);
+    updateIgPreview(result);
+
+    showStatus(`แปลงสำเร็จ! พบ ${processed.filter(l => l === INVISIBLE).length} บรรทัดว่าง`, 'success');
+  }
+
+  function updateIgPreview(text: string) {
+    if (!text.trim()) {
+      igPreview.innerHTML = '<span class="text-gray-400 text-xs">พรีวิวแคปชั่นจะแสดงที่นี่หลังแปลง...</span>';
+      return;
+    }
+    const lines = text.split('\n');
+    const html = lines.map(line => {
+      if (line === INVISIBLE || line.trim() === '') {
+        return '<div class="h-5"></div>';
+      }
+      return `<div class="leading-relaxed">${escapeHtml(line)}</div>`;
+    }).join('');
+    igPreview.innerHTML = html;
+  }
+
+  function escapeHtml(s: string) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  async function copyOutput() {
+    const text = outputEl.value;
+    if (!text) {
+      showStatus('ยังไม่มีผลลัพธ์ กรุณากดแปลงก่อน', 'error');
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      showStatus('คัดลอกแล้ว! แปะใน Instagram ได้เลย ✓', 'success');
+      const btnText = document.getElementById('copy-btn-text')!;
+      btnText.textContent = '✓ คัดลอกแล้ว!';
+      setTimeout(() => { btnText.textContent = 'คัดลอกผลลัพธ์'; }, 2000);
+    } catch {
+      const el = document.createElement('textarea');
+      el.value = text;
+      el.style.position = 'fixed';
+      el.style.opacity = '0';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      showStatus('คัดลอกแล้ว! ✓', 'success');
+    }
+  }
+
+  function showStatus(msg: string, type: 'success' | 'error') {
+    statusMsg.textContent = msg;
+    statusBar.className = `border-t px-5 py-2.5 text-center ${type === 'success' ? 'border-green-100 bg-green-50' : 'border-red-100 bg-red-50'}`;
+    statusMsg.className = `text-sm font-medium ${type === 'success' ? 'text-green-700' : 'text-red-700'}`;
+    statusBar.classList.remove('hidden');
+    setTimeout(() => statusBar.classList.add('hidden'), 3000);
+  }
+
+  inputEl.addEventListener('input', updateInputCount);
+  processBtn.addEventListener('click', processCaption);
+  copyBtn.addEventListener('click', copyOutput);
+</script>

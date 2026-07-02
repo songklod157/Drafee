@@ -1,0 +1,329 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+
+const faqs = [
+  {
+    q: 'X (Twitter) จำกัดกี่ตัวอักษร?',
+    a: 'X (Twitter) จำกัดที่ 280 ตัวอักษรต่อทวีต โดย URL ทุกลิงก์จะถูกนับเป็น 23 ตัวอักษรเสมอ ไม่ว่าลิงก์จะยาวแค่ไหน เครื่องมือนี้นับตัวอักษรตามที่พิมพ์ (ไม่รวมการคำนวณ URL)'
+  },
+  {
+    q: 'emoji นับเป็นกี่ตัวอักษร?',
+    a: 'emoji ส่วนใหญ่นับเป็น 1 ตัวอักษรตามที่มองเห็น แต่บาง emoji ที่ซับซ้อน (เช่น emoji family หรือ emoji ที่มี modifier) อาจใช้หลาย Unicode code point เครื่องมือนี้ใช้การนับแบบ grapheme cluster ให้ผลใกล้เคียงที่สุด'
+  },
+  {
+    q: 'TikTok จำกัดตัวอักษรเท่าไร?',
+    a: 'TikTok caption จำกัดที่ 2,200 ตัวอักษร เหมือนกับ Instagram caption แต่ hashtag บน TikTok ส่งผลต่อการค้นหาได้มากกว่า แนะนำให้ใช้ hashtag ที่เกี่ยวข้อง 3-5 อัน'
+  },
+  {
+    q: 'YouTube title มีข้อจำกัดอะไร?',
+    a: 'YouTube title จำกัดที่ 100 ตัวอักษร แต่ในผลการค้นหา YouTube จะแสดงแค่ประมาณ 60-70 ตัวอักษรแรก แนะนำให้ใส่คีย์เวิร์ดสำคัญไว้ช่วงต้น'
+  },
+  {
+    q: 'LINE OA จำกัดตัวอักษรเท่าไร?',
+    a: 'LINE Official Account ข้อความ broadcast จำกัดที่ 1,000 ตัวอักษรต่อข้อความ (ขึ้นอยู่กับประเภทข้อความ) แต่ข้อความ chat ปกติไม่มีข้อจำกัดที่ชัดเจน'
+  },
+];
+
+const schema = JSON.stringify([
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "นับตัวอักษรออนไลน์ฟรี ครบทุกแพลตฟอร์ม",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web Browser",
+    "url": "https://drafee.com/character-counter",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "THB" },
+    "description": "นับตัวอักษรเรียลไทม์สำหรับ Instagram, X, TikTok, YouTube, Facebook, LINE OA พร้อม progress bar แสดงใกล้ limit",
+    "inLanguage": "th"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(f => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": { "@type": "Answer", "text": f.a }
+    }))
+  }
+]);
+
+const platforms = [
+  { id: 'ig-caption', name: 'Instagram Caption', limit: 2200, color: '#9333EA', icon: 'platform-instagram' },
+  { id: 'ig-bio', name: 'Instagram Bio', limit: 150, color: '#7C3AED', icon: 'platform-instagram' },
+  { id: 'x', name: 'X (Twitter)', limit: 280, color: '#0EA5E9', icon: 'platform-twitter' },
+  { id: 'tiktok', name: 'TikTok Caption', limit: 2200, color: '#EC4899', icon: 'platform-tiktok' },
+  { id: 'youtube-title', name: 'YouTube Title', limit: 100, color: '#EF4444', icon: 'platform-youtube' },
+  { id: 'youtube-desc', name: 'YouTube Description', limit: 5000, color: '#DC2626', icon: 'platform-youtube' },
+  { id: 'facebook', name: 'Facebook Post', limit: 63206, color: '#3B82F6', icon: 'platform-facebook' },
+  { id: 'line-oa', name: 'LINE OA Message', limit: 1000, color: '#22C55E', icon: 'platform-line' },
+];
+---
+
+<Layout
+  title="นับตัวอักษรออนไลน์ฟรี IG X TikTok YouTube ครบทุกแพลตฟอร์ม | Drafee"
+  description="นับตัวอักษรเรียลไทม์สำหรับ Instagram caption 2200 / bio 150, X 280, TikTok 2200, YouTube title 100, Facebook, LINE OA พร้อม progress bar บอก limit"
+  schemaJson={schema}
+>
+
+  <!-- Hero -->
+  <div class="bg-gradient-to-b from-teal-50 via-cyan-50 to-white pt-10 pb-6">
+    <div class="mx-auto max-w-4xl px-4">
+      <div class="mb-2 text-sm text-teal-600 font-medium">เครื่องมือครีเอเตอร์</div>
+      <h1 class="text-2xl font-extrabold text-gray-900 sm:text-3xl">นับตัวอักษรออนไลน์ ทุกแพลตฟอร์มในหน้าเดียว</h1>
+      <p class="mt-2 text-gray-600 text-sm leading-relaxed">
+        พิมพ์หรือวางข้อความ — เห็น limit ของทุกแพลตฟอร์มแบบ real-time ทันที · ฟรี ไม่ต้องสมัครสมาชิก
+      </p>
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-4xl px-4 pb-12">
+
+    <!-- Tool Card -->
+    <div class="mt-6 rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+
+      <!-- Big count display -->
+      <div class="bg-gray-900 px-6 py-5 text-center">
+        <div class="flex items-baseline justify-center gap-2">
+          <span id="total-count" class="text-6xl font-black text-white tabular-nums">0</span>
+          <span class="text-lg text-gray-400 font-medium">ตัวอักษร</span>
+        </div>
+        <p class="mt-1 text-xs text-gray-500" id="word-info">0 คำ · 0 ย่อหน้า</p>
+      </div>
+
+      <!-- Textarea -->
+      <div class="p-5">
+        <textarea
+          id="text-input"
+          placeholder="พิมพ์หรือวางข้อความที่ต้องการนับตัวอักษรที่นี่..."
+          rows="6"
+          class="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-900 placeholder-gray-400 focus:border-teal-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-100 transition-colors"
+        ></textarea>
+        <div class="mt-2 flex gap-2">
+          <button id="clear-btn" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+            ล้าง
+          </button>
+          <button id="copy-btn" class="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+            <Icon name="clipboard" class="h-3.5 w-3.5" /><span id="copy-btn-text">คัดลอก</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Platform Grid -->
+      <div class="border-t border-gray-100 p-5">
+        <h2 class="mb-4 text-sm font-bold text-gray-700 uppercase tracking-wider">ตัวอักษรเทียบกับ limit ของแต่ละแพลตฟอร์ม</h2>
+        <div class="grid gap-3 sm:grid-cols-2">
+          {platforms.map(p => (
+            <div class="rounded-xl border border-gray-100 bg-gray-50 p-3">
+              <div class="flex items-center justify-between mb-1.5">
+                <div class="flex items-center gap-1.5">
+                  <span class="h-4 w-4 shrink-0" style={`color:${p.color}`}><Icon name={p.icon} class="h-4 w-4" /></span>
+                  <span class="text-xs font-semibold text-gray-700">{p.name}</span>
+                </div>
+                <span id={`label-${p.id}`} class="text-xs font-mono text-gray-500">0 / {p.limit.toLocaleString()}</span>
+              </div>
+              <div class="h-1.5 rounded-full bg-gray-200 overflow-hidden">
+                <div
+                  id={`bar-${p.id}`}
+                  class="h-full rounded-full transition-all duration-200"
+                  style={`width:0%; background-color:${p.color}`}
+                  data-limit={p.limit}
+                  data-color={p.color}
+                ></div>
+              </div>
+              <p id={`status-${p.id}`} class="mt-1 text-[10px] text-gray-400 hidden text-right font-medium"></p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Ad Slot -->
+    <div class="mt-8 flex min-h-[90px] items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 text-center text-xs text-gray-400">
+      <div><p class="font-medium">โฆษณา</p><p class="text-gray-300">728×90</p></div>
+    </div>
+
+    <!-- How to use -->
+    <section class="mt-10">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">วิธีใช้งาน เครื่องนับตัวอักษร</h2>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { n: '1', t: 'วางข้อความ', d: 'คัดลอกแคปชั่น โพสต์ หรือข้อความที่ต้องการวัดแล้ววางในช่องด้านบน' },
+          { n: '2', t: 'ดูจำนวน', d: 'ตัวเลขใหญ่ด้านบนแสดงจำนวนตัวอักษรทั้งหมด อัปเดตทันทีทุกครั้งที่พิมพ์' },
+          { n: '3', t: 'เช็ค limit', d: 'แถบสีด้านล่างแสดงว่าข้อความของคุณใช้ limit ไปเท่าไรในแต่ละแพลตฟอร์ม' },
+          { n: '4', t: 'ปรับแก้', d: 'หาก limit เกิน แถบจะเปลี่ยนเป็นสีแดง ตัดทอนข้อความแล้วดูผลแบบ real-time' },
+        ].map(s => (
+          <div class="flex gap-3">
+            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-100 text-sm font-bold text-teal-700">{s.n}</div>
+            <div>
+              <p class="font-semibold text-gray-900 text-sm">{s.t}</p>
+              <p class="text-xs text-gray-600 mt-0.5 leading-relaxed">{s.d}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Platform Limits Table -->
+    <section class="mt-10">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">ตาราง limit ตัวอักษรทุกแพลตฟอร์ม (2025)</h2>
+      <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">แพลตฟอร์ม</th>
+              <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wide">Limit</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide hidden sm:table-cell">หมายเหตุ</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            {[
+              { icon: 'platform-instagram', iconColor: '#9333EA', name: 'Instagram Caption', limit: '2,200', note: 'แสดง 3 บรรทัดแรกก่อน "อ่านเพิ่มเติม"' },
+              { icon: 'platform-instagram', iconColor: '#7C3AED', name: 'Instagram Bio', limit: '150', note: '' },
+              { icon: 'platform-twitter', iconColor: '#0EA5E9', name: 'X (Twitter)', limit: '280', note: 'URL นับเป็น 23 ตัวเสมอ' },
+              { icon: 'platform-tiktok', iconColor: '#EC4899', name: 'TikTok Caption', limit: '2,200', note: '' },
+              { icon: 'platform-youtube', iconColor: '#EF4444', name: 'YouTube Title', limit: '100', note: 'แสดงในผลค้นหา ~60-70 ตัว' },
+              { icon: 'platform-youtube', iconColor: '#DC2626', name: 'YouTube Description', limit: '5,000', note: 'แสดง 3 บรรทัดแรกก่อนกด "แสดงเพิ่ม"' },
+              { icon: 'platform-facebook', iconColor: '#3B82F6', name: 'Facebook Post', limit: '63,206', note: 'แสดง ~477 ตัวก่อน "อ่านเพิ่มเติม"' },
+              { icon: 'platform-line', iconColor: '#22C55E', name: 'LINE OA Message', limit: '1,000', note: 'ข้อความ broadcast' },
+            ].map(row => (
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-4 py-3 font-medium text-gray-900">
+                  <span class="inline-flex items-center gap-2">
+                    <span style={`color:${row.iconColor}`}><Icon name={row.icon} class="h-4 w-4" /></span>
+                    {row.name}
+                  </span>
+                </td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-teal-600">{row.limit}</td>
+                <td class="px-4 py-3 text-gray-500 hidden sm:table-cell">{row.note}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="mt-10">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">คำถามที่พบบ่อย (FAQ)</h2>
+      <div class="space-y-3">
+        {faqs.map(faq => (
+          <details class="group rounded-xl border border-gray-200 bg-white">
+            <summary class="flex cursor-pointer items-center justify-between px-5 py-4 text-sm font-semibold text-gray-900 list-none">
+              {faq.q}
+              <svg class="h-4 w-4 shrink-0 text-gray-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </summary>
+            <div class="border-t border-gray-100 px-5 py-4 text-sm text-gray-600 leading-relaxed">{faq.a}</div>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="mt-10">
+      <h2 class="text-lg font-bold text-gray-900 mb-3">เครื่องมืออื่นที่น่าสนใจ</h2>
+      <div class="flex flex-wrap gap-2">
+        <a href="/ig-line-break" class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 hover:border-teal-300 hover:text-teal-600 transition-colors"><Icon name="camera" class="h-4 w-4" /> เว้นบรรทัดแคปชั่น IG</a>
+        <a href="/withholding-tax-calculator" class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 hover:border-teal-300 hover:text-teal-600 transition-colors"><Icon name="calculator" class="h-4 w-4" /> คำนวณภาษีหัก ณ ที่จ่าย</a>
+        <a href="/severance-calculator" class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 hover:border-teal-300 hover:text-teal-600 transition-colors"><Icon name="briefcase" class="h-4 w-4" /> คำนวณเงินชดเชย</a>
+      </div>
+    </section>
+
+    <!-- Ad Slot -->
+    <div class="mt-8 flex min-h-[90px] items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 text-center text-xs text-gray-400">
+      <div><p class="font-medium">โฆษณา</p><p class="text-gray-300">336×280</p></div>
+    </div>
+
+  </div>
+</Layout>
+
+<script>
+  const textInput = document.getElementById('text-input') as HTMLTextAreaElement;
+  const totalCount = document.getElementById('total-count')!;
+  const wordInfo = document.getElementById('word-info')!;
+  const clearBtn = document.getElementById('clear-btn')!;
+  const copyBtn = document.getElementById('copy-btn')!;
+
+  const platforms = [
+    { id: 'ig-caption', limit: 2200, color: '#9333EA' },
+    { id: 'ig-bio', limit: 150, color: '#7C3AED' },
+    { id: 'x', limit: 280, color: '#0EA5E9' },
+    { id: 'tiktok', limit: 2200, color: '#EC4899' },
+    { id: 'youtube-title', limit: 100, color: '#EF4444' },
+    { id: 'youtube-desc', limit: 5000, color: '#DC2626' },
+    { id: 'facebook', limit: 63206, color: '#3B82F6' },
+    { id: 'line-oa', limit: 1000, color: '#22C55E' },
+  ];
+
+  function countChars(s: string) {
+    const segmenter = (Intl as any).Segmenter ? new (Intl as any).Segmenter() : null;
+    if (segmenter) {
+      return [...segmenter.segment(s)].length;
+    }
+    return [...s].length;
+  }
+
+  function countWords(s: string) {
+    const trimmed = s.trim();
+    if (!trimmed) return 0;
+    return trimmed.split(/\s+/).length;
+  }
+
+  function countParagraphs(s: string) {
+    const trimmed = s.trim();
+    if (!trimmed) return 0;
+    return trimmed.split(/\n\s*\n/).length;
+  }
+
+  function update() {
+    const text = textInput.value;
+    const charCount = countChars(text);
+    const wordCount = countWords(text);
+    const paraCount = countParagraphs(text);
+
+    totalCount.textContent = charCount.toLocaleString('th-TH');
+    wordInfo.textContent = `${wordCount.toLocaleString('th-TH')} คำ · ${paraCount.toLocaleString('th-TH')} ย่อหน้า`;
+
+    platforms.forEach(p => {
+      const bar = document.getElementById(`bar-${p.id}`) as HTMLElement;
+      const label = document.getElementById(`label-${p.id}`)!;
+      const statusEl = document.getElementById(`status-${p.id}`)!;
+
+      const pct = Math.min((charCount / p.limit) * 100, 100);
+      bar.style.width = `${pct}%`;
+      const over = charCount > p.limit;
+      bar.style.backgroundColor = over ? '#EF4444' : charCount > p.limit * 0.9 ? '#F59E0B' : p.color;
+      label.textContent = `${charCount.toLocaleString()} / ${p.limit.toLocaleString()}`;
+      label.className = `text-xs font-mono ${over ? 'text-red-600 font-bold' : 'text-gray-500'}`;
+      if (over) {
+        statusEl.textContent = `เกิน ${(charCount - p.limit).toLocaleString()} ตัว`;
+        statusEl.className = 'mt-1 text-[10px] text-red-500 text-right font-semibold';
+        statusEl.classList.remove('hidden');
+      } else {
+        statusEl.classList.add('hidden');
+      }
+    });
+  }
+
+  textInput.addEventListener('input', update);
+
+  clearBtn.addEventListener('click', () => {
+    textInput.value = '';
+    update();
+    textInput.focus();
+  });
+
+  copyBtn.addEventListener('click', async () => {
+    if (!textInput.value) return;
+    try {
+      await navigator.clipboard.writeText(textInput.value);
+      document.getElementById('copy-btn-text')!.textContent = '✓ คัดลอกแล้ว';
+      setTimeout(() => { document.getElementById('copy-btn-text')!.textContent = 'คัดลอก'; }, 2000);
+    } catch {
+      textInput.select();
+      document.execCommand('copy');
+    }
+  });
+</script>
