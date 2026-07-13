@@ -1,0 +1,158 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+
+const schema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "แปลงเงินตรา อัตราแลกเปลี่ยน ออนไลน์ฟรี",
+  "description": "แปลงเงินตราต่างประเทศ บาทไทย ดอลลาร์ ยูโร ปอนด์ เยน หยวน และอื่นๆ",
+  "url": "https://drafee.com/currency-converter",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "THB" }
+});
+
+const currencies = [
+  { code: 'THB', name: 'บาทไทย', flag: '🇹🇭', rate: 1 },
+  { code: 'USD', name: 'ดอลลาร์สหรัฐ', flag: '🇺🇸', rate: 33.50 },
+  { code: 'EUR', name: 'ยูโร', flag: '🇪🇺', rate: 36.00 },
+  { code: 'GBP', name: 'ปอนด์อังกฤษ', flag: '🇬🇧', rate: 42.00 },
+  { code: 'JPY', name: 'เยนญี่ปุ่น', flag: '🇯🇵', rate: 0.22 },
+  { code: 'CNY', name: 'หยวนจีน', flag: '🇨🇳', rate: 4.60 },
+  { code: 'SGD', name: 'ดอลลาร์สิงคโปร์', flag: '🇸🇬', rate: 25.00 },
+  { code: 'HKD', name: 'ดอลลาร์ฮ่องกง', flag: '🇭🇰', rate: 4.30 },
+  { code: 'AUD', name: 'ดอลลาร์ออสเตรเลีย', flag: '🇦🇺', rate: 22.00 },
+  { code: 'KRW', name: 'วอนเกาหลี', flag: '🇰🇷', rate: 0.024 },
+  { code: 'MYR', name: 'ริงกิตมาเลเซีย', flag: '🇲🇾', rate: 7.50 },
+];
+---
+
+<Layout
+  title="แปลงเงินตรา อัตราแลกเปลี่ยน บาทไทย ดอลลาร์ ยูโร ออนไลน์ฟรี | Drafee"
+  description="แปลงเงินตราฟรี บาทไทย ดอลลาร์ ยูโร ปอนด์ เยน หยวน สิงคโปร์ ฮ่องกง ออสเตรเลีย เกาหลี มาเลเซีย ใส่จำนวนและเลือกสกุลเงิน ได้ผลทันที"
+  schemaJson={schema}
+>
+  <div class="bg-gradient-to-b from-teal-50 to-white py-10">
+    <div class="mx-auto max-w-2xl px-4 text-center">
+      <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-teal-100 px-4 py-1.5 text-sm font-medium text-teal-700">
+        <Icon name="arrows-right-left" class="h-4 w-4" /> เครื่องมือการเงิน
+      </div>
+      <h1 class="text-3xl font-bold text-gray-900 sm:text-4xl">แปลงเงินตรา</h1>
+      <p class="mt-3 text-gray-500">11 สกุลเงิน · อัตราอ้างอิงโดยประมาณ</p>
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-2xl px-4 py-8">
+    <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+
+      <!-- From -->
+      <div class="mb-4">
+        <label class="mb-1.5 block text-sm font-medium text-gray-700">จำนวนเงิน</label>
+        <div class="flex gap-3">
+          <input
+            id="amount"
+            type="number"
+            min="0"
+            step="any"
+            placeholder="เช่น 1000"
+            class="w-full rounded-xl border border-gray-300 px-4 py-3 text-lg focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200"
+          />
+          <select id="from-currency" class="w-44 shrink-0 rounded-xl border border-gray-300 px-3 py-3 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200 text-sm">
+            {currencies.map(c => <option value={c.code}>{c.flag} {c.code}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <button
+        onclick="convert()"
+        class="w-full rounded-xl bg-teal-600 py-3 font-semibold text-white transition-colors hover:bg-teal-700"
+      >
+        <span class="inline-flex items-center gap-2"><Icon name="arrows-right-left" class="h-4 w-4" /> แปลงทุกสกุลเงิน</span>
+      </button>
+
+      <!-- Results -->
+      <div id="results" class="mt-6 hidden">
+        <p class="mb-3 text-sm text-gray-500">ผลลัพธ์</p>
+        <div id="result-list" class="divide-y divide-gray-100 rounded-xl border border-gray-200 overflow-hidden"></div>
+        <p class="mt-3 text-xs text-gray-400">* อัตราแลกเปลี่ยนโดยประมาณ ณ เวลาที่อัปเดตล่าสุด ไม่ใช่อัตราทางการของธนาคาร กรุณาตรวจสอบกับธนาคารหรือแหล่งข้อมูลทางการก่อนทำธุรกรรมจริง</p>
+      </div>
+    </div>
+
+    <!-- Rate Table -->
+    <div class="mt-6 rounded-2xl border border-gray-200 bg-white p-6">
+      <h2 class="mb-4 font-semibold text-gray-900">อัตราอ้างอิง (ต่อ 1 บาทไทย)</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead><tr class="border-b border-gray-100 text-left text-gray-500">
+            <th class="pb-2 font-medium">สกุลเงิน</th>
+            <th class="pb-2 font-medium text-right">1 THB =</th>
+          </tr></thead>
+          <tbody class="divide-y divide-gray-50">
+            {currencies.filter(c => c.code !== 'THB').map(c => (
+              <tr>
+                <td class="py-2">{c.flag} {c.code} <span class="text-gray-400">({c.name})</span></td>
+                <td class="py-2 text-right font-mono">{(1/c.rate).toFixed(c.code === 'JPY' || c.code === 'KRW' ? 2 : 4)} {c.code}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-6 grid gap-2 sm:grid-cols-2">
+      <a href="/vat-calculator" class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:border-teal-300 hover:text-teal-700 transition-colors">
+        <Icon name="receipt-percent" class="h-4 w-4 text-teal-500" /> คำนวณ VAT 7%
+      </a>
+      <a href="/income-tax-calculator" class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:border-teal-300 hover:text-teal-700 transition-colors">
+        <Icon name="scale" class="h-4 w-4 text-teal-500" /> คำนวณภาษีเงินได้
+      </a>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+const RATES = {
+  THB:1, USD:33.50, EUR:36.00, GBP:42.00, JPY:0.22,
+  CNY:4.60, SGD:25.00, HKD:4.30, AUD:22.00, KRW:0.024, MYR:7.50
+};
+const FLAGS = {THB:'🇹🇭',USD:'🇺🇸',EUR:'🇪🇺',GBP:'🇬🇧',JPY:'🇯🇵',CNY:'🇨🇳',SGD:'🇸🇬',HKD:'🇭🇰',AUD:'🇦🇺',KRW:'🇰🇷',MYR:'🇲🇾'};
+const NAMES = {THB:'บาทไทย',USD:'ดอลลาร์สหรัฐ',EUR:'ยูโร',GBP:'ปอนด์อังกฤษ',JPY:'เยนญี่ปุ่น',CNY:'หยวนจีน',SGD:'ดอลลาร์สิงคโปร์',HKD:'ดอลลาร์ฮ่องกง',AUD:'ดอลลาร์ออสเตรเลีย',KRW:'วอนเกาหลี',MYR:'ริงกิตมาเลเซีย'};
+
+function fmt(n, code) {
+  const decimals = (code === 'JPY' || code === 'KRW') ? 0 : 2;
+  return n.toLocaleString('th-TH', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+}
+
+function convert() {
+  const amount = parseFloat(document.getElementById('amount').value);
+  const from = document.getElementById('from-currency').value;
+  if (!amount || amount <= 0) return;
+
+  const thb = amount * RATES[from];
+  const list = document.getElementById('result-list');
+  list.innerHTML = '';
+
+  Object.keys(RATES).forEach(code => {
+    if (code === from) return;
+    const val = thb / RATES[code];
+    const div = document.createElement('div');
+    div.className = 'flex items-center justify-between px-4 py-3 hover:bg-gray-50';
+    div.innerHTML = `
+      <span class="flex items-center gap-2 text-sm">
+        <span class="text-base">${FLAGS[code]}</span>
+        <span class="font-medium">${code}</span>
+        <span class="text-gray-400 text-xs hidden sm:inline">${NAMES[code]}</span>
+      </span>
+      <span class="font-semibold text-gray-900">${fmt(val, code)} <span class="text-gray-400 font-normal text-xs">${code}</span></span>
+    `;
+    list.appendChild(div);
+  });
+
+  document.getElementById('results').classList.remove('hidden');
+}
+
+document.getElementById('amount').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') convert();
+});
+</script>

@@ -1,0 +1,211 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+
+const schema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "นับวัน คำนวณอายุ ออนไลน์ฟรี",
+  "description": "นับจำนวนวันระหว่างสองวัน หรือคำนวณอายุจากวันเกิด พร้อมบอกวัน เดือน ปี",
+  "url": "https://drafee.com/date-calculator",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "THB" }
+});
+---
+
+<Layout
+  title="นับวัน คำนวณอายุจากวันเกิด ออนไลน์ฟรี | Drafee"
+  description="นับจำนวนวันระหว่างสองวันฟรี หรือคำนวณอายุจากวันเกิด บอกทั้งวัน เดือน ปี ครบถ้วน ใช้งานได้เลยไม่ต้องสมัคร"
+  schemaJson={schema}
+>
+  <div class="bg-gradient-to-b from-teal-50 to-white py-10">
+    <div class="mx-auto max-w-2xl px-4 text-center">
+      <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-teal-100 px-4 py-1.5 text-sm font-medium text-teal-700">
+        <Icon name="calendar" class="h-4 w-4" /> เครื่องมือทั่วไป
+      </div>
+      <h1 class="text-3xl font-bold text-gray-900 sm:text-4xl">นับวัน / คำนวณอายุ</h1>
+      <p class="mt-3 text-gray-500">นับวันระหว่างสองวัน หรือคำนวณอายุจากวันเกิด</p>
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-2xl px-4 py-8">
+    <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+
+      <!-- Mode Toggle -->
+      <div class="mb-6 flex rounded-xl bg-gray-100 p-1">
+        <button id="btn-diff" onclick="setMode('diff')" class="flex-1 rounded-lg py-2 text-sm font-medium transition-colors bg-white text-gray-900 shadow-sm">
+          นับวันระหว่างสองวัน
+        </button>
+        <button id="btn-age" onclick="setMode('age')" class="flex-1 rounded-lg py-2 text-sm font-medium transition-colors text-gray-500 hover:text-gray-700">
+          คำนวณอายุ
+        </button>
+      </div>
+
+      <!-- Date Diff Form -->
+      <div id="form-diff">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-gray-700">วันเริ่มต้น</label>
+            <input id="diff-start" type="date" class="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200" />
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-gray-700">วันสิ้นสุด</label>
+            <input id="diff-end" type="date" class="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Age Form -->
+      <div id="form-age" class="hidden">
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-gray-700">วันเกิด</label>
+          <input id="age-birth" type="date" class="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200" />
+        </div>
+        <p class="mt-2 text-xs text-gray-400">คำนวณถึงวันนี้ (<span id="today-label"></span>)</p>
+      </div>
+
+      <button
+        onclick="calculate()"
+        class="mt-5 w-full rounded-xl bg-teal-600 py-3 font-semibold text-white transition-colors hover:bg-teal-700"
+      >
+        <span class="inline-flex items-center gap-2"><Icon name="calendar" class="h-4 w-4" /> คำนวณ</span>
+      </button>
+
+      <!-- Result -->
+      <div id="result" class="mt-6 hidden">
+        <div id="result-diff" class="hidden text-center">
+          <p class="text-sm text-gray-500 mb-2">จำนวนวันระหว่างสองวัน</p>
+          <p id="val-days-diff" class="text-5xl font-black text-teal-600">—</p>
+          <p class="mt-1 text-sm text-gray-400">วัน</p>
+          <div class="mt-4 grid grid-cols-3 gap-3">
+            <div class="rounded-xl bg-gray-50 p-3 text-center">
+              <p id="val-weeks" class="text-xl font-bold text-gray-800">—</p>
+              <p class="text-xs text-gray-500 mt-0.5">สัปดาห์</p>
+            </div>
+            <div class="rounded-xl bg-gray-50 p-3 text-center">
+              <p id="val-months-diff" class="text-xl font-bold text-gray-800">—</p>
+              <p class="text-xs text-gray-500 mt-0.5">เดือน (โดยประมาณ)</p>
+            </div>
+            <div class="rounded-xl bg-gray-50 p-3 text-center">
+              <p id="val-years-diff" class="text-xl font-bold text-gray-800">—</p>
+              <p class="text-xs text-gray-500 mt-0.5">ปี (โดยประมาณ)</p>
+            </div>
+          </div>
+          <p id="val-weekday" class="mt-3 text-sm text-gray-500"></p>
+        </div>
+
+        <div id="result-age" class="hidden text-center">
+          <p class="text-sm text-gray-500 mb-3">อายุปัจจุบัน</p>
+          <div class="flex justify-center gap-6">
+            <div>
+              <p id="val-age-years" class="text-5xl font-black text-teal-600">—</p>
+              <p class="text-sm text-gray-500 mt-1">ปี</p>
+            </div>
+            <div>
+              <p id="val-age-months" class="text-5xl font-black text-gray-700">—</p>
+              <p class="text-sm text-gray-500 mt-1">เดือน</p>
+            </div>
+            <div>
+              <p id="val-age-days" class="text-5xl font-black text-gray-700">—</p>
+              <p class="text-sm text-gray-500 mt-1">วัน</p>
+            </div>
+          </div>
+          <p id="val-age-total-days" class="mt-4 text-sm text-gray-400"></p>
+          <p id="val-next-birthday" class="mt-1 text-sm text-gray-400"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 grid gap-2 sm:grid-cols-2">
+      <a href="/salary-calculator" class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:border-teal-300 hover:text-teal-700 transition-colors">
+        <Icon name="banknotes" class="h-4 w-4 text-teal-500" /> คำนวณเงินเดือนสุทธิ
+      </a>
+      <a href="/severance-calculator" class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:border-teal-300 hover:text-teal-700 transition-colors">
+        <Icon name="briefcase" class="h-4 w-4 text-teal-500" /> คำนวณเงินชดเชยเลิกจ้าง
+      </a>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+let mode = 'diff';
+
+const WEEKDAYS_TH = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+
+document.addEventListener('DOMContentLoaded', function() {
+  const today = new Date().toISOString().slice(0,10);
+  document.getElementById('diff-end').value = today;
+  document.getElementById('today-label').textContent = formatDate(today);
+});
+
+function formatDate(iso) {
+  const d = new Date(iso + 'T00:00:00');
+  return `${d.getDate()} ${['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][d.getMonth()]} ${d.getFullYear()+543}`;
+}
+
+function setMode(m) {
+  mode = m;
+  const active = 'flex-1 rounded-lg py-2 text-sm font-medium transition-colors bg-white text-gray-900 shadow-sm';
+  const inactive = 'flex-1 rounded-lg py-2 text-sm font-medium transition-colors text-gray-500 hover:text-gray-700';
+  document.getElementById('btn-diff').className = m === 'diff' ? active : inactive;
+  document.getElementById('btn-age').className = m === 'age' ? active : inactive;
+  document.getElementById('form-diff').classList.toggle('hidden', m !== 'diff');
+  document.getElementById('form-age').classList.toggle('hidden', m !== 'age');
+  document.getElementById('result').classList.add('hidden');
+}
+
+function calculate() {
+  if (mode === 'diff') calcDiff();
+  else calcAge();
+}
+
+function calcDiff() {
+  const s = document.getElementById('diff-start').value;
+  const e = document.getElementById('diff-end').value;
+  if (!s || !e) return;
+  const d1 = new Date(s + 'T00:00:00');
+  const d2 = new Date(e + 'T00:00:00');
+  const days = Math.round(Math.abs(d2 - d1) / 86400000);
+  document.getElementById('val-days-diff').textContent = days.toLocaleString('th-TH');
+  document.getElementById('val-weeks').textContent = Math.floor(days / 7).toLocaleString('th-TH');
+  document.getElementById('val-months-diff').textContent = (days / 30.44).toFixed(1);
+  document.getElementById('val-years-diff').textContent = (days / 365.25).toFixed(2);
+  const endDay = new Date(e + 'T00:00:00');
+  document.getElementById('val-weekday').textContent = `วันสิ้นสุดตรงกับ วัน${WEEKDAYS_TH[endDay.getDay()]}`;
+  document.getElementById('result-diff').classList.remove('hidden');
+  document.getElementById('result-age').classList.add('hidden');
+  document.getElementById('result').classList.remove('hidden');
+}
+
+function calcAge() {
+  const b = document.getElementById('age-birth').value;
+  if (!b) return;
+  const birth = new Date(b + 'T00:00:00');
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  let years = today.getFullYear() - birth.getFullYear();
+  let months = today.getMonth() - birth.getMonth();
+  let days = today.getDate() - birth.getDate();
+
+  if (days < 0) { months--; const prev = new Date(today.getFullYear(), today.getMonth(), 0); days += prev.getDate(); }
+  if (months < 0) { years--; months += 12; }
+
+  const totalDays = Math.round((today - birth) / 86400000);
+
+  // Next birthday
+  const nextBday = new Date(today.getFullYear(), birth.getMonth(), birth.getDate());
+  if (nextBday <= today) nextBday.setFullYear(nextBday.getFullYear() + 1);
+  const daysToNext = Math.round((nextBday - today) / 86400000);
+
+  document.getElementById('val-age-years').textContent = years;
+  document.getElementById('val-age-months').textContent = months;
+  document.getElementById('val-age-days').textContent = days;
+  document.getElementById('val-age-total-days').textContent = `รวมทั้งหมด ${totalDays.toLocaleString('th-TH')} วัน`;
+  document.getElementById('val-next-birthday').textContent = daysToNext === 0 ? '🎂 วันนี้คือวันเกิด!' : `วันเกิดครั้งถัดไปอีก ${daysToNext} วัน`;
+  document.getElementById('result-age').classList.remove('hidden');
+  document.getElementById('result-diff').classList.add('hidden');
+  document.getElementById('result').classList.remove('hidden');
+}
+</script>

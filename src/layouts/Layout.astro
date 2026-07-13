@@ -12,9 +12,10 @@ const canonical = Astro.props.canonical || `https://drafee.com${Astro.url.pathna
 const navLinks = [
   { href: '/ig-line-break', label: 'เว้นบรรทัด IG' },
   { href: '/character-counter', label: 'นับตัวอักษร' },
-  { href: '/transfer-fee-calculator', label: 'ค่าโอนบ้าน' },
-  { href: '/severance-calculator', label: 'เงินชดเชย' },
-  { href: '/withholding-tax-calculator', label: 'ภาษี WHT' },
+  { href: '/vat-calculator', label: 'VAT 7%' },
+  { href: '/salary-calculator', label: 'เงินเดือนสุทธิ' },
+  { href: '/income-tax-calculator', label: 'ภาษีเงินได้' },
+  { href: '/currency-converter', label: 'แปลงเงิน' },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -124,7 +125,7 @@ const currentPath = Astro.url.pathname;
   <!-- Footer -->
   <footer class="mt-16 border-t border-gray-200 bg-white">
     <div class="mx-auto max-w-6xl px-4 py-10">
-      <div class="grid gap-8 sm:grid-cols-3">
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
         <!-- Brand -->
         <div>
           <div class="flex items-center gap-2">
@@ -138,17 +139,31 @@ const currentPath = Astro.url.pathname;
 
         <!-- Creator Tools -->
         <div>
-          <h3 class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">เครื่องมือครีเอเตอร์</h3>
+          <h3 class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">ครีเอเตอร์</h3>
           <ul class="space-y-2">
             <li><a href="/ig-line-break" class="text-sm text-gray-600 hover:text-teal-600">เว้นบรรทัดแคปชั่น IG</a></li>
             <li><a href="/character-counter" class="text-sm text-gray-600 hover:text-teal-600">นับตัวอักษรทุกแพลตฟอร์ม</a></li>
+            <li><a href="/engagement-rate" class="text-sm text-gray-600 hover:text-teal-600">คำนวณ Engagement Rate</a></li>
+          </ul>
+        </div>
+
+        <!-- General Tools -->
+        <div>
+          <h3 class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">เครื่องมือทั่วไป</h3>
+          <ul class="space-y-2">
+            <li><a href="/land-converter" class="text-sm text-gray-600 hover:text-teal-600">แปลงหน่วยที่ดิน</a></li>
+            <li><a href="/date-calculator" class="text-sm text-gray-600 hover:text-teal-600">นับวัน / คำนวณอายุ</a></li>
           </ul>
         </div>
 
         <!-- Finance Tools -->
         <div>
-          <h3 class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">เครื่องมือการเงิน</h3>
+          <h3 class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">การเงิน & ธุรกิจ</h3>
           <ul class="space-y-2">
+            <li><a href="/vat-calculator" class="text-sm text-gray-600 hover:text-teal-600">คำนวณ VAT 7%</a></li>
+            <li><a href="/salary-calculator" class="text-sm text-gray-600 hover:text-teal-600">คำนวณเงินเดือนสุทธิ</a></li>
+            <li><a href="/income-tax-calculator" class="text-sm text-gray-600 hover:text-teal-600">ภาษีเงินได้บุคคลธรรมดา</a></li>
+            <li><a href="/currency-converter" class="text-sm text-gray-600 hover:text-teal-600">แปลงเงินตรา</a></li>
             <li><a href="/transfer-fee-calculator" class="text-sm text-gray-600 hover:text-teal-600">คำนวณค่าโอนบ้าน-ที่ดิน</a></li>
             <li><a href="/severance-calculator" class="text-sm text-gray-600 hover:text-teal-600">คำนวณเงินชดเชยเลิกจ้าง</a></li>
             <li><a href="/withholding-tax-calculator" class="text-sm text-gray-600 hover:text-teal-600">คำนวณภาษีหัก ณ ที่จ่าย</a></li>

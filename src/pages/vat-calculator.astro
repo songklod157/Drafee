@@ -1,0 +1,154 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+
+const schema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "คำนวณ VAT 7% ออนไลน์ฟรี",
+  "description": "คำนวณภาษีมูลค่าเพิ่ม VAT 7% บวก VAT จากราคาก่อนภาษี หรือถอด VAT จากราคารวมภาษีแล้ว",
+  "url": "https://drafee.com/vat-calculator",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "THB" }
+});
+---
+
+<Layout
+  title="คำนวณ VAT 7% ออนไลน์ฟรี บวก/ถอด VAT | Drafee"
+  description="คำนวณ VAT 7% ฟรี ทั้งแบบบวก VAT จากราคาก่อนภาษี และถอด VAT จากราคารวมภาษีแล้ว ใช้งานได้เลยไม่ต้องสมัคร"
+  schemaJson={schema}
+>
+  <div class="bg-gradient-to-b from-teal-50 to-white py-10">
+    <div class="mx-auto max-w-2xl px-4 text-center">
+      <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-teal-100 px-4 py-1.5 text-sm font-medium text-teal-700">
+        <Icon name="receipt-percent" class="h-4 w-4" /> เครื่องมือการเงิน
+      </div>
+      <h1 class="text-3xl font-bold text-gray-900 sm:text-4xl">คำนวณ VAT 7%</h1>
+      <p class="mt-3 text-gray-500">บวก VAT จากราคาก่อนภาษี หรือถอด VAT จากราคารวมภาษีแล้ว</p>
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-2xl px-4 py-8">
+    <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+
+      <!-- Mode Toggle -->
+      <div class="mb-6 flex rounded-xl bg-gray-100 p-1">
+        <button id="btn-add" onclick="setMode('add')" class="flex-1 rounded-lg py-2 text-sm font-medium transition-colors bg-white text-gray-900 shadow-sm">
+          บวก VAT (ราคาก่อน VAT)
+        </button>
+        <button id="btn-remove" onclick="setMode('remove')" class="flex-1 rounded-lg py-2 text-sm font-medium transition-colors text-gray-500 hover:text-gray-700">
+          ถอด VAT (ราคารวม VAT แล้ว)
+        </button>
+      </div>
+
+      <!-- Input -->
+      <div class="mb-4">
+        <label id="input-label" class="mb-1.5 block text-sm font-medium text-gray-700">ราคาก่อน VAT (บาท)</label>
+        <input
+          id="price-input"
+          type="number"
+          min="0"
+          placeholder="เช่น 1000"
+          class="w-full rounded-xl border border-gray-300 px-4 py-3 text-lg focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label class="mb-1.5 block text-sm font-medium text-gray-700">อัตรา VAT</label>
+        <div class="flex items-center rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-gray-500">7% (อัตราปัจจุบัน)</div>
+      </div>
+
+      <button
+        onclick="calculate()"
+        class="w-full rounded-xl bg-teal-600 py-3 font-semibold text-white transition-colors hover:bg-teal-700"
+      >
+        <span class="inline-flex items-center gap-2"><Icon name="receipt-percent" class="h-4 w-4" /> คำนวณ VAT</span>
+      </button>
+
+      <!-- Results -->
+      <div id="result" class="mt-6 hidden">
+        <div class="grid gap-3 sm:grid-cols-3">
+          <div class="rounded-xl bg-gray-50 p-4 text-center">
+            <p class="text-xs text-gray-500" id="label-before">ราคาก่อน VAT</p>
+            <p class="mt-1 text-xl font-bold text-gray-900" id="val-before">—</p>
+          </div>
+          <div class="rounded-xl bg-teal-50 p-4 text-center">
+            <p class="text-xs text-teal-600">VAT 7%</p>
+            <p class="mt-1 text-xl font-bold text-teal-700" id="val-vat">—</p>
+          </div>
+          <div class="rounded-xl bg-gray-50 p-4 text-center">
+            <p class="text-xs text-gray-500" id="label-after">ราคารวม VAT</p>
+            <p class="mt-1 text-xl font-bold text-gray-900" id="val-after">—</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related -->
+    <div class="mt-8">
+      <h2 class="mb-3 text-sm font-semibold text-gray-500 uppercase tracking-wider">เครื่องมืออื่นๆ</h2>
+      <div class="grid gap-2 sm:grid-cols-2">
+        <a href="/withholding-tax-calculator" class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:border-teal-300 hover:text-teal-700 transition-colors">
+          <Icon name="calculator" class="h-4 w-4 text-teal-500" /> คำนวณภาษีหัก ณ ที่จ่าย
+        </a>
+        <a href="/income-tax-calculator" class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:border-teal-300 hover:text-teal-700 transition-colors">
+          <Icon name="scale" class="h-4 w-4 text-teal-500" /> คำนวณภาษีเงินได้บุคคลธรรมดา
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+let mode = 'add';
+
+function setMode(m) {
+  mode = m;
+  const btnAdd = document.getElementById('btn-add');
+  const btnRemove = document.getElementById('btn-remove');
+  const label = document.getElementById('input-label');
+  const active = 'flex-1 rounded-lg py-2 text-sm font-medium transition-colors bg-white text-gray-900 shadow-sm';
+  const inactive = 'flex-1 rounded-lg py-2 text-sm font-medium transition-colors text-gray-500 hover:text-gray-700';
+  if (m === 'add') {
+    btnAdd.className = active; btnRemove.className = inactive;
+    label.textContent = 'ราคาก่อน VAT (บาท)';
+  } else {
+    btnRemove.className = active; btnAdd.className = inactive;
+    label.textContent = 'ราคารวม VAT แล้ว (บาท)';
+  }
+  document.getElementById('result').classList.add('hidden');
+  document.getElementById('price-input').value = '';
+}
+
+function fmt(n) {
+  return n.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' บาท';
+}
+
+function calculate() {
+  const price = parseFloat(document.getElementById('price-input').value);
+  if (!price || price <= 0) return;
+
+  let before, vat, after;
+  if (mode === 'add') {
+    before = price;
+    vat = price * 0.07;
+    after = price * 1.07;
+  } else {
+    after = price;
+    before = price / 1.07;
+    vat = price - before;
+  }
+
+  document.getElementById('label-before').textContent = 'ราคาก่อน VAT';
+  document.getElementById('label-after').textContent = 'ราคารวม VAT';
+  document.getElementById('val-before').textContent = fmt(before);
+  document.getElementById('val-vat').textContent = fmt(vat);
+  document.getElementById('val-after').textContent = fmt(after);
+  document.getElementById('result').classList.remove('hidden');
+}
+
+document.getElementById('price-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') calculate();
+});
+</script>

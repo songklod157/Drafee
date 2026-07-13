@@ -1,0 +1,205 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+
+const schema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "คำนวณ Engagement Rate ออนไลน์ฟรี",
+  "description": "คำนวณ Engagement Rate สำหรับ Instagram, TikTok, YouTube, Facebook พร้อมบอกระดับว่าดี/ปานกลาง/ต่ำ",
+  "url": "https://drafee.com/engagement-rate",
+  "applicationCategory": "SocialMediaApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "THB" }
+});
+
+const platforms = [
+  { id: 'ig', name: 'Instagram', color: '#9333EA', icon: 'platform-instagram', fields: [
+    { id: 'followers', label: 'Followers', placeholder: 'เช่น 10000' },
+    { id: 'likes', label: 'Likes', placeholder: 'เช่น 500' },
+    { id: 'comments', label: 'Comments', placeholder: 'เช่น 30' },
+  ], formula: '(Likes + Comments) / Followers × 100', note: 'ค่าเฉลี่ยที่ดี: > 3%' },
+  { id: 'tt', name: 'TikTok', color: '#EC4899', icon: 'platform-tiktok', fields: [
+    { id: 'views', label: 'Views', placeholder: 'เช่น 50000' },
+    { id: 'likes', label: 'Likes', placeholder: 'เช่น 2000' },
+    { id: 'comments', label: 'Comments', placeholder: 'เช่น 100' },
+    { id: 'shares', label: 'Shares', placeholder: 'เช่น 50' },
+  ], formula: '(Likes + Comments + Shares) / Views × 100', note: 'ค่าเฉลี่ยที่ดี: > 5%' },
+  { id: 'yt', name: 'YouTube', color: '#EF4444', icon: 'platform-youtube', fields: [
+    { id: 'views', label: 'Views', placeholder: 'เช่น 10000' },
+    { id: 'likes', label: 'Likes', placeholder: 'เช่น 800' },
+    { id: 'comments', label: 'Comments', placeholder: 'เช่น 50' },
+  ], formula: '(Likes + Comments) / Views × 100', note: 'ค่าเฉลี่ยที่ดี: > 4%' },
+  { id: 'fb', name: 'Facebook', color: '#3B82F6', icon: 'platform-facebook', fields: [
+    { id: 'reach', label: 'Reach', placeholder: 'เช่น 5000' },
+    { id: 'reactions', label: 'Reactions', placeholder: 'เช่น 200' },
+    { id: 'comments', label: 'Comments', placeholder: 'เช่น 30' },
+    { id: 'shares', label: 'Shares', placeholder: 'เช่น 20' },
+  ], formula: '(Reactions + Comments + Shares) / Reach × 100', note: 'ค่าเฉลี่ยที่ดี: > 1%' },
+];
+---
+
+<Layout
+  title="คำนวณ Engagement Rate IG TikTok YouTube Facebook | Drafee"
+  description="คำนวณ Engagement Rate ฟรีสำหรับ Instagram, TikTok, YouTube, Facebook พร้อมบอกระดับ engagement ว่าดี ปานกลาง หรือต่ำ เทียบ benchmark ของแต่ละแพลตฟอร์ม"
+  schemaJson={schema}
+>
+  <div class="bg-gradient-to-b from-teal-50 to-white py-10">
+    <div class="mx-auto max-w-2xl px-4 text-center">
+      <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-teal-100 px-4 py-1.5 text-sm font-medium text-teal-700">
+        <Icon name="chart-bar" class="h-4 w-4" /> เครื่องมือครีเอเตอร์
+      </div>
+      <h1 class="text-3xl font-bold text-gray-900 sm:text-4xl">คำนวณ Engagement Rate</h1>
+      <p class="mt-3 text-gray-500">Instagram · TikTok · YouTube · Facebook พร้อม benchmark</p>
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-2xl px-4 py-8">
+    <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+
+      <!-- Platform Tabs -->
+      <div class="mb-6 flex gap-2 overflow-x-auto">
+        {platforms.map((p, i) => (
+          <button
+            onclick={`setPlatform('${p.id}')`}
+            id={`tab-${p.id}`}
+            class={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${i === 0 ? 'bg-teal-50 text-teal-700 border border-teal-200' : 'text-gray-500 hover:bg-gray-100'}`}
+          >
+            <Icon name={p.icon} class="h-4 w-4" />
+            {p.name}
+          </button>
+        ))}
+      </div>
+
+      <!-- Forms -->
+      {platforms.map((p) => (
+        <div id={`form-${p.id}`} class={p.id === 'ig' ? '' : 'hidden'}>
+          <div class="mb-4 grid gap-3 sm:grid-cols-2">
+            {p.fields.map((f) => (
+              <div>
+                <label class="mb-1 block text-sm font-medium text-gray-700">{f.label}</label>
+                <input
+                  id={`${p.id}-${f.id}`}
+                  type="number"
+                  min="0"
+                  placeholder={f.placeholder}
+                  class="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200"
+                />
+              </div>
+            ))}
+          </div>
+          <p class="mb-4 text-xs text-gray-400">สูตร: {p.formula}</p>
+        </div>
+      ))}
+
+      <button
+        onclick="calculate()"
+        class="w-full rounded-xl bg-teal-600 py-3 font-semibold text-white transition-colors hover:bg-teal-700"
+      >
+        <span class="inline-flex items-center gap-2"><Icon name="chart-bar" class="h-4 w-4" /> คำนวณ Engagement Rate</span>
+      </button>
+
+      <!-- Result -->
+      <div id="result" class="mt-6 hidden text-center">
+        <p class="text-sm text-gray-500 mb-1">Engagement Rate</p>
+        <p id="er-value" class="text-5xl font-black text-teal-600">—</p>
+        <div id="er-badge" class="mt-3 inline-block rounded-full px-4 py-1.5 text-sm font-semibold"></div>
+        <p id="er-note" class="mt-2 text-xs text-gray-400"></p>
+      </div>
+    </div>
+
+    <!-- Benchmark Table -->
+    <div class="mt-6 rounded-2xl border border-gray-200 bg-white p-6">
+      <h2 class="mb-4 font-semibold text-gray-900">Benchmark Engagement Rate</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-gray-100">
+              <th class="pb-2 text-left font-medium text-gray-500">แพลตฟอร์ม</th>
+              <th class="pb-2 text-center font-medium text-green-600">ดีมาก</th>
+              <th class="pb-2 text-center font-medium text-yellow-600">ปานกลาง</th>
+              <th class="pb-2 text-center font-medium text-red-500">ต่ำ</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50">
+            <tr><td class="py-2 font-medium">Instagram</td><td class="py-2 text-center text-green-600">> 6%</td><td class="py-2 text-center text-yellow-600">3–6%</td><td class="py-2 text-center text-red-500">{'< 3%'}</td></tr>
+            <tr><td class="py-2 font-medium">TikTok</td><td class="py-2 text-center text-green-600">> 9%</td><td class="py-2 text-center text-yellow-600">5–9%</td><td class="py-2 text-center text-red-500">{'< 5%'}</td></tr>
+            <tr><td class="py-2 font-medium">YouTube</td><td class="py-2 text-center text-green-600">> 6%</td><td class="py-2 text-center text-yellow-600">4–6%</td><td class="py-2 text-center text-red-500">{'< 4%'}</td></tr>
+            <tr><td class="py-2 font-medium">Facebook</td><td class="py-2 text-center text-green-600">> 2%</td><td class="py-2 text-center text-yellow-600">1–2%</td><td class="py-2 text-center text-red-500">{'< 1%'}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Related -->
+    <div class="mt-6">
+      <div class="grid gap-2 sm:grid-cols-2">
+        <a href="/ig-line-break" class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:border-teal-300 hover:text-teal-700 transition-colors">
+          <Icon name="pencil" class="h-4 w-4 text-teal-500" /> เว้นบรรทัดแคปชั่น IG
+        </a>
+        <a href="/character-counter" class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:border-teal-300 hover:text-teal-700 transition-colors">
+          <Icon name="hashtag" class="h-4 w-4 text-teal-500" /> นับตัวอักษรทุกแพลตฟอร์ม
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+let currentPlatform = 'ig';
+
+const benchmarks = {
+  ig:  { great: 6, mid: 3, baseLabel: 'Followers' },
+  tt:  { great: 9, mid: 5, baseLabel: 'Views' },
+  yt:  { great: 6, mid: 4, baseLabel: 'Views' },
+  fb:  { great: 2, mid: 1, baseLabel: 'Reach' },
+};
+
+function setPlatform(id) {
+  currentPlatform = id;
+  ['ig','tt','yt','fb'].forEach(p => {
+    document.getElementById(`form-${p}`).classList.toggle('hidden', p !== id);
+    const tab = document.getElementById(`tab-${p}`);
+    tab.className = p === id
+      ? 'flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors bg-teal-50 text-teal-700 border border-teal-200'
+      : 'flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors text-gray-500 hover:bg-gray-100';
+  });
+  document.getElementById('result').classList.add('hidden');
+}
+
+function getVal(id) { return parseFloat(document.getElementById(id)?.value) || 0; }
+
+function calculate() {
+  let er = 0;
+  const p = currentPlatform;
+  if (p === 'ig') {
+    const followers = getVal('ig-followers');
+    if (!followers) return;
+    er = ((getVal('ig-likes') + getVal('ig-comments')) / followers) * 100;
+  } else if (p === 'tt') {
+    const views = getVal('tt-views');
+    if (!views) return;
+    er = ((getVal('tt-likes') + getVal('tt-comments') + getVal('tt-shares')) / views) * 100;
+  } else if (p === 'yt') {
+    const views = getVal('yt-views');
+    if (!views) return;
+    er = ((getVal('yt-likes') + getVal('yt-comments')) / views) * 100;
+  } else if (p === 'fb') {
+    const reach = getVal('fb-reach');
+    if (!reach) return;
+    er = ((getVal('fb-reactions') + getVal('fb-comments') + getVal('fb-shares')) / reach) * 100;
+  }
+
+  const bm = benchmarks[p];
+  let badge = '', badgeClass = '';
+  if (er >= bm.great) { badge = '🔥 ดีมาก'; badgeClass = 'bg-green-100 text-green-700'; }
+  else if (er >= bm.mid) { badge = '👍 ปานกลาง'; badgeClass = 'bg-yellow-100 text-yellow-700'; }
+  else { badge = '📉 ต่ำกว่าเกณฑ์'; badgeClass = 'bg-red-100 text-red-600'; }
+
+  document.getElementById('er-value').textContent = er.toFixed(2) + '%';
+  const badgeEl = document.getElementById('er-badge');
+  badgeEl.textContent = badge; badgeEl.className = `mt-3 inline-block rounded-full px-4 py-1.5 text-sm font-semibold ${badgeClass}`;
+  document.getElementById('er-note').textContent = `Benchmark ที่ดี: > ${bm.great}% | ปานกลาง: ${bm.mid}–${bm.great}%`;
+  document.getElementById('result').classList.remove('hidden');
+}
+</script>

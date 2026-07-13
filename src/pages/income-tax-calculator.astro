@@ -1,0 +1,274 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+
+const schema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "คำนวณภาษีเงินได้บุคคลธรรมดา ปี 2567 ออนไลน์ฟรี",
+  "description": "คำนวณภาษีเงินได้บุคคลธรรมดา ปี 2567 อัตราก้าวหน้า 0-35% พร้อมค่าลดหย่อนครบถ้วน",
+  "url": "https://drafee.com/income-tax-calculator",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "THB" }
+});
+
+const brackets = [
+  { range: '0 – 150,000', rate: 'ยกเว้น', color: 'text-green-600' },
+  { range: '150,001 – 300,000', rate: '5%', color: 'text-yellow-600' },
+  { range: '300,001 – 500,000', rate: '10%', color: 'text-orange-500' },
+  { range: '500,001 – 750,000', rate: '15%', color: 'text-orange-600' },
+  { range: '750,001 – 1,000,000', rate: '20%', color: 'text-red-500' },
+  { range: '1,000,001 – 2,000,000', rate: '25%', color: 'text-red-600' },
+  { range: '2,000,001 – 5,000,000', rate: '30%', color: 'text-red-700' },
+  { range: '5,000,001 ขึ้นไป', rate: '35%', color: 'text-red-800' },
+];
+---
+
+<Layout
+  title="คำนวณภาษีเงินได้บุคคลธรรมดา ปี 2567 อัตราก้าวหน้า ออนไลน์ฟรี | Drafee"
+  description="คำนวณภาษีเงินได้บุคคลธรรมดาปี 2567 ฟรี อัตราก้าวหน้า 0-35% ใส่รายได้และค่าลดหย่อน คำนวณภาษีที่ต้องชำระและอัตราภาษีที่แท้จริง"
+  schemaJson={schema}
+>
+  <div class="bg-gradient-to-b from-teal-50 to-white py-10">
+    <div class="mx-auto max-w-2xl px-4 text-center">
+      <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-teal-100 px-4 py-1.5 text-sm font-medium text-teal-700">
+        <Icon name="scale" class="h-4 w-4" /> เครื่องมือการเงิน
+      </div>
+      <h1 class="text-3xl font-bold text-gray-900 sm:text-4xl">ภาษีเงินได้บุคคลธรรมดา</h1>
+      <p class="mt-3 text-gray-500">ปีภาษี 2567 · อัตราก้าวหน้า 0–35%</p>
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-2xl px-4 py-8">
+    <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+
+      <!-- Income -->
+      <div class="mb-5">
+        <label class="mb-1.5 block text-sm font-semibold text-gray-700">รายได้รวมทั้งปี (บาท)</label>
+        <input id="annual-income" type="number" min="0" placeholder="เช่น 600000"
+          class="w-full rounded-xl border border-gray-300 px-4 py-3 text-lg focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200" />
+        <p class="mt-1 text-xs text-gray-400">เงินเดือน โบนัส ค่าจ้าง รายได้จากการจ้างงาน (มาตรา 40(1)(2))</p>
+      </div>
+
+      <!-- Deductions -->
+      <div class="rounded-xl bg-gray-50 p-4 mb-5">
+        <p class="mb-4 text-sm font-semibold text-gray-700">ค่าลดหย่อน</p>
+        <div class="grid gap-3 sm:grid-cols-2">
+          <div>
+            <label class="mb-1 block text-xs font-medium text-gray-600">ประกันสังคม (บาท/ปี)</label>
+            <input id="sso" type="number" min="0" max="9000" placeholder="สูงสุด 9,000"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-medium text-gray-600">กองทุนสำรองเลี้ยงชีพ PVD (บาท/ปี)</label>
+            <input id="pvd" type="number" min="0" placeholder="0"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-medium text-gray-600">กองทุน RMF (บาท/ปี)</label>
+            <input id="rmf" type="number" min="0" placeholder="0"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-medium text-gray-600">กองทุน SSF (บาท/ปี)</label>
+            <input id="ssf" type="number" min="0" placeholder="0"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-medium text-gray-600">เบี้ยประกันชีวิต (บาท/ปี)</label>
+            <input id="life-ins" type="number" min="0" placeholder="สูงสุด 100,000"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-medium text-gray-600">เบี้ยประกันสุขภาพ (บาท/ปี)</label>
+            <input id="health-ins" type="number" min="0" placeholder="สูงสุด 25,000"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-medium text-gray-600">ดอกเบี้ยกู้บ้าน (บาท/ปี)</label>
+            <input id="home-loan" type="number" min="0" placeholder="สูงสุด 100,000"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-medium text-gray-600">เงินบริจาคทั่วไป (บาท/ปี)</label>
+            <input id="donate" type="number" min="0" placeholder="0"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-medium text-gray-600">จำนวนบุตร (คน)</label>
+            <input id="children" type="number" min="0" max="20" placeholder="0"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-medium text-gray-600">ลดหย่อนบิดา-มารดา (คน × 30,000)</label>
+            <input id="parents" type="number" min="0" max="4" placeholder="0"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none" />
+          </div>
+        </div>
+      </div>
+
+      <button onclick="calculate()"
+        class="w-full rounded-xl bg-teal-600 py-3 font-semibold text-white transition-colors hover:bg-teal-700">
+        <span class="inline-flex items-center gap-2"><Icon name="scale" class="h-4 w-4" /> คำนวณภาษี</span>
+      </button>
+
+      <!-- Result -->
+      <div id="result" class="mt-6 hidden">
+        <div class="grid gap-3 sm:grid-cols-3 mb-4">
+          <div class="rounded-xl bg-red-50 p-4 text-center">
+            <p class="text-xs text-red-600 mb-1">ภาษีที่ต้องชำระ</p>
+            <p id="val-tax" class="text-2xl font-black text-red-700">—</p>
+          </div>
+          <div class="rounded-xl bg-gray-50 p-4 text-center">
+            <p class="text-xs text-gray-500 mb-1">เงินได้สุทธิ</p>
+            <p id="val-taxable" class="text-2xl font-black text-gray-800">—</p>
+          </div>
+          <div class="rounded-xl bg-teal-50 p-4 text-center">
+            <p class="text-xs text-teal-600 mb-1">อัตราภาษีแท้จริง</p>
+            <p id="val-eff-rate" class="text-2xl font-black text-teal-700">—</p>
+          </div>
+        </div>
+
+        <!-- Bracket Breakdown -->
+        <div>
+          <p class="text-sm font-semibold text-gray-700 mb-2">รายละเอียดตามขั้นภาษี</p>
+          <div id="bracket-breakdown" class="space-y-1.5 text-xs"></div>
+        </div>
+
+        <div id="deduct-summary" class="mt-4 rounded-xl bg-gray-50 p-4 text-xs text-gray-600 space-y-1"></div>
+      </div>
+    </div>
+
+    <!-- Tax Brackets Table -->
+    <div class="mt-6 rounded-2xl border border-gray-200 bg-white p-6">
+      <h2 class="mb-4 font-semibold text-gray-900">อัตราภาษีเงินได้บุคคลธรรมดา ปี 2567</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead><tr class="border-b border-gray-100 text-left text-gray-500">
+            <th class="pb-2 font-medium">เงินได้สุทธิ (บาท)</th>
+            <th class="pb-2 font-medium text-right">อัตราภาษี</th>
+          </tr></thead>
+          <tbody class="divide-y divide-gray-50">
+            {brackets.map(b => (
+              <tr>
+                <td class="py-2 text-gray-700">{b.range}</td>
+                <td class={`py-2 text-right font-semibold ${b.color}`}>{b.rate}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-6 grid gap-2 sm:grid-cols-2">
+      <a href="/salary-calculator" class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:border-teal-300 hover:text-teal-700 transition-colors">
+        <Icon name="banknotes" class="h-4 w-4 text-teal-500" /> คำนวณเงินเดือนสุทธิ
+      </a>
+      <a href="/withholding-tax-calculator" class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:border-teal-300 hover:text-teal-700 transition-colors">
+        <Icon name="calculator" class="h-4 w-4 text-teal-500" /> ภาษีหัก ณ ที่จ่าย
+      </a>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+function fmt(n) {
+  return n.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' บาท';
+}
+
+const TAX_BRACKETS = [
+  { min: 0,       max: 150000,  rate: 0 },
+  { min: 150000,  max: 300000,  rate: 0.05 },
+  { min: 300000,  max: 500000,  rate: 0.10 },
+  { min: 500000,  max: 750000,  rate: 0.15 },
+  { min: 750000,  max: 1000000, rate: 0.20 },
+  { min: 1000000, max: 2000000, rate: 0.25 },
+  { min: 2000000, max: 5000000, rate: 0.30 },
+  { min: 5000000, max: Infinity, rate: 0.35 },
+];
+
+const BRACKET_LABELS = ['0–150K (ยกเว้น)','150K–300K (5%)','300K–500K (10%)','500K–750K (15%)','750K–1M (20%)','1M–2M (25%)','2M–5M (30%)','5M+ (35%)'];
+
+function calcTaxDetailed(taxable) {
+  const details = [];
+  let totalTax = 0;
+  for (let i = 0; i < TAX_BRACKETS.length; i++) {
+    const b = TAX_BRACKETS[i];
+    if (taxable <= b.min) { details.push({ label: BRACKET_LABELS[i], amount: 0, tax: 0 }); continue; }
+    const amt = Math.min(taxable, b.max) - b.min;
+    const tax = amt * b.rate;
+    totalTax += tax;
+    details.push({ label: BRACKET_LABELS[i], amount: amt, tax });
+  }
+  return { totalTax, details };
+}
+
+function calculate() {
+  const income = parseFloat(document.getElementById('annual-income').value) || 0;
+  if (income <= 0) return;
+
+  const sso = Math.min(parseFloat(document.getElementById('sso').value) || 0, 9000);
+  const pvd = parseFloat(document.getElementById('pvd').value) || 0;
+  const rmf = parseFloat(document.getElementById('rmf').value) || 0;
+  const ssf = parseFloat(document.getElementById('ssf').value) || 0;
+  const lifeIns = Math.min(parseFloat(document.getElementById('life-ins').value) || 0, 100000);
+  const healthIns = Math.min(parseFloat(document.getElementById('health-ins').value) || 0, 25000);
+  const homeLoan = Math.min(parseFloat(document.getElementById('home-loan').value) || 0, 100000);
+  const donate = parseFloat(document.getElementById('donate').value) || 0;
+  const children = parseInt(document.getElementById('children').value) || 0;
+  const parents = parseInt(document.getElementById('parents').value) || 0;
+
+  const expenseDeduct = Math.min(income * 0.5, 100000);
+  const personalDeduct = 60000;
+  const childDeduct = children > 0 ? 30000 + (children - 1) * 60000 : 0;
+  const parentDeduct = parents * 30000;
+  const donateDeduct = Math.min(donate, income * 0.1); // max 10% of income
+
+  // RMF limit: 30% of income, max 500,000; SSF limit: 30% of income, max 200,000
+  const rmfCapped = Math.min(rmf, income * 0.30, 500000);
+  const ssfCapped = Math.min(ssf, income * 0.30, 200000);
+
+  const totalDeduct = expenseDeduct + personalDeduct + sso + pvd + rmfCapped + ssfCapped + lifeIns + healthIns + homeLoan + donateDeduct + childDeduct + parentDeduct;
+  const taxableIncome = Math.max(0, income - totalDeduct);
+  const { totalTax, details } = calcTaxDetailed(taxableIncome);
+  const effRate = income > 0 ? (totalTax / income) * 100 : 0;
+
+  document.getElementById('val-tax').textContent = fmt(totalTax);
+  document.getElementById('val-taxable').textContent = fmt(taxableIncome);
+  document.getElementById('val-eff-rate').textContent = effRate.toFixed(2) + '%';
+
+  // Bracket breakdown
+  const breakdownEl = document.getElementById('bracket-breakdown');
+  breakdownEl.innerHTML = '';
+  details.forEach(d => {
+    if (d.amount === 0) return;
+    const row = document.createElement('div');
+    row.className = 'flex justify-between items-center rounded-lg bg-gray-50 px-3 py-2';
+    row.innerHTML = `<span class="text-gray-600">${d.label}</span><span class="font-medium">${fmt(d.tax)}</span>`;
+    breakdownEl.appendChild(row);
+  });
+
+  const sumEl = document.getElementById('deduct-summary');
+  sumEl.innerHTML = `
+    <p class="font-semibold text-gray-700 mb-2">สรุปค่าลดหย่อน</p>
+    <p>• ค่าใช้จ่าย 50%: ${fmt(expenseDeduct)}</p>
+    <p>• ลดหย่อนส่วนตัว: ${fmt(personalDeduct)}</p>
+    <p>• ประกันสังคม: ${fmt(sso)}</p>
+    ${pvd > 0 ? `<p>• กองทุนสำรองเลี้ยงชีพ: ${fmt(pvd)}</p>` : ''}
+    ${rmfCapped > 0 ? `<p>• RMF: ${fmt(rmfCapped)}</p>` : ''}
+    ${ssfCapped > 0 ? `<p>• SSF: ${fmt(ssfCapped)}</p>` : ''}
+    ${lifeIns > 0 ? `<p>• ประกันชีวิต: ${fmt(lifeIns)}</p>` : ''}
+    ${healthIns > 0 ? `<p>• ประกันสุขภาพ: ${fmt(healthIns)}</p>` : ''}
+    ${homeLoan > 0 ? `<p>• ดอกเบี้ยกู้บ้าน: ${fmt(homeLoan)}</p>` : ''}
+    ${donateDeduct > 0 ? `<p>• เงินบริจาค: ${fmt(donateDeduct)}</p>` : ''}
+    ${childDeduct > 0 ? `<p>• บุตร ${children} คน: ${fmt(childDeduct)}</p>` : ''}
+    ${parentDeduct > 0 ? `<p>• บิดา-มารดา ${parents} คน: ${fmt(parentDeduct)}</p>` : ''}
+    <p class="mt-2 pt-2 border-t border-gray-200 font-semibold">รวมค่าลดหย่อน: ${fmt(totalDeduct)}</p>
+  `;
+
+  document.getElementById('result').classList.remove('hidden');
+}
+
+document.getElementById('annual-income').addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+</script>

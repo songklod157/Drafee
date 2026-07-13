@@ -33,14 +33,54 @@ const creatorTools = [
     badge: '',
     badgeColor: '',
   },
+  {
+    href: '/engagement-rate',
+    icon: 'chart-bar',
+    title: 'คำนวณ Engagement Rate',
+    desc: 'คำนวณ ER สำหรับ Instagram, TikTok, YouTube, Facebook พร้อม benchmark บอกว่าดี ปานกลาง หรือต่ำ',
+    badge: 'ครีเอเตอร์',
+    badgeColor: 'bg-pink-100 text-pink-700',
+  },
 ];
 
 const financeTools = [
+  {
+    href: '/vat-calculator',
+    icon: 'receipt-percent',
+    title: 'คำนวณ VAT 7%',
+    desc: 'บวก VAT จากราคาก่อนภาษี หรือถอด VAT จากราคารวมภาษีแล้ว ได้ผลทันที',
+    badge: '',
+    badgeColor: '',
+  },
   {
     href: '/transfer-fee-calculator',
     icon: 'home',
     title: 'คำนวณค่าโอนบ้าน & ที่ดิน',
     desc: 'แตกรายการค่าโอน 2%, ค่าจดจำนอง 1%, ภาษีธุรกิจเฉพาะ 3.3% หรืออากรแสตมป์ 0.5% ตามเงื่อนไขการถือครอง',
+    badge: '',
+    badgeColor: '',
+  },
+  {
+    href: '/salary-calculator',
+    icon: 'banknotes',
+    title: 'คำนวณเงินเดือนสุทธิ',
+    desc: 'หักประกันสังคม 5% และภาษีเงินได้หัก ณ ที่จ่าย สำหรับพนักงานประจำ ปีภาษี 2567',
+    badge: '',
+    badgeColor: '',
+  },
+  {
+    href: '/income-tax-calculator',
+    icon: 'scale',
+    title: 'ภาษีเงินได้บุคคลธรรมดา',
+    desc: 'คำนวณภาษีอัตราก้าวหน้า 0–35% ปีภาษี 2567 พร้อมค่าลดหย่อนครบ RMF SSF ประกันชีวิต บุตร',
+    badge: '',
+    badgeColor: '',
+  },
+  {
+    href: '/currency-converter',
+    icon: 'arrows-right-left',
+    title: 'แปลงเงินตรา',
+    desc: 'แปลง 11 สกุลเงิน บาทไทย ดอลลาร์ ยูโร ปอนด์ เยน หยวน สิงคโปร์ และอื่นๆ ได้ทันที',
     badge: '',
     badgeColor: '',
   },
@@ -59,6 +99,25 @@ const financeTools = [
     desc: 'ฟรีแลนซ์คำนวณ WHT 3% + VAT 7% ได้เลย รองรับทั้งคำนวณตรงและย้อนกลับ (ต้องการรับสุทธิเท่าไร → ต้องเสนอราคาเท่าไร)',
     badge: 'ฟรีแลนซ์',
     badgeColor: 'bg-emerald-100 text-emerald-700',
+  },
+];
+
+const generalTools = [
+  {
+    href: '/land-converter',
+    icon: 'squares-2x2',
+    title: 'แปลงหน่วยที่ดิน',
+    desc: 'แปลง ไร่ งาน ตร.วา ตร.ม. ตร.ฟุต เฮกตาร์ เอเคอร์ ใส่ค่าหน่วยใดก็ได้ ได้ทุกหน่วยทันที',
+    badge: '',
+    badgeColor: '',
+  },
+  {
+    href: '/date-calculator',
+    icon: 'calendar',
+    title: 'นับวัน / คำนวณอายุ',
+    desc: 'นับจำนวนวันระหว่างสองวัน หรือคำนวณอายุจากวันเกิด บอกทั้งวัน เดือน ปี และวันเกิดครั้งถัดไป',
+    badge: '',
+    badgeColor: '',
   },
 ];
 ---
@@ -151,6 +210,33 @@ const financeTools = [
       </div>
     </section>
 
+    <!-- General Tools -->
+    <section class="mt-10">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 uppercase tracking-wide">เครื่องมือทั่วไป</span>
+        <div class="h-px flex-1 bg-gray-200"></div>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        {generalTools.map(tool => (
+          <a href={tool.href} class="group block rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+            <div class="flex items-start gap-4">
+              <Icon name={tool.icon} class="h-8 w-8 shrink-0 text-teal-600" />
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h2 class="text-base font-semibold text-gray-900 group-hover:text-teal-700 transition-colors">{tool.title}</h2>
+                  {tool.badge && (
+                    <span class={`rounded-full px-2 py-0.5 text-xs font-semibold ${tool.badgeColor}`}>{tool.badge}</span>
+                  )}
+                </div>
+                <p class="mt-1.5 text-sm text-gray-600 leading-relaxed">{tool.desc}</p>
+                <span class="mt-3 inline-block text-sm font-semibold text-teal-600 group-hover:text-teal-700">ใช้งานฟรี →</span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
     <!-- Ad Slot: Middle -->
     <div class="mt-10 flex min-h-[90px] items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 text-center text-xs text-gray-400">
       <div>
@@ -192,15 +278,21 @@ const financeTools = [
       <h2 class="text-lg font-bold text-gray-900">เครื่องมือออนไลน์ฟรีสำหรับคนไทย ครบในที่เดียว</h2>
       <p>
         Drafee รวบรวมเครื่องมือที่คนไทยต้องการมากที่สุดไว้ในเว็บเดียว ตั้งแต่เครื่องมือสำหรับ
-        <strong>ครีเอเตอร์และคนทำ social media</strong> อย่าง <a href="/ig-line-break" class="text-teal-600 hover:underline">ตัวเว้นบรรทัด Instagram</a>
-        และ <a href="/character-counter" class="text-teal-600 hover:underline">ตัวนับตัวอักษรทุกแพลตฟอร์ม</a>
-        ไปจนถึงเครื่องมือ<strong>การเงินและธุรกิจ</strong> เช่น
-        <a href="/transfer-fee-calculator" class="text-teal-600 hover:underline">เครื่องคำนวณค่าโอนบ้านและที่ดิน</a>,
-        <a href="/severance-calculator" class="text-teal-600 hover:underline">เครื่องคำนวณเงินชดเชยเลิกจ้าง</a>
-        และ <a href="/withholding-tax-calculator" class="text-teal-600 hover:underline">เครื่องคำนวณภาษีหัก ณ ที่จ่ายสำหรับฟรีแลนซ์</a>
+        <strong>ครีเอเตอร์และคนทำ social media</strong> อย่าง <a href="/ig-line-break" class="text-teal-600 hover:underline">ตัวเว้นบรรทัด Instagram</a>,
+        <a href="/character-counter" class="text-teal-600 hover:underline">ตัวนับตัวอักษรทุกแพลตฟอร์ม</a>
+        และ <a href="/engagement-rate" class="text-teal-600 hover:underline">เครื่องคำนวณ Engagement Rate</a>
+        ไปจนถึงเครื่องมือ<strong>การเงินและภาษี</strong> เช่น
+        <a href="/vat-calculator" class="text-teal-600 hover:underline">คำนวณ VAT 7%</a>,
+        <a href="/salary-calculator" class="text-teal-600 hover:underline">คำนวณเงินเดือนสุทธิ</a>,
+        <a href="/income-tax-calculator" class="text-teal-600 hover:underline">คำนวณภาษีเงินได้บุคคลธรรมดา</a>,
+        <a href="/currency-converter" class="text-teal-600 hover:underline">แปลงเงินตรา</a>,
+        <a href="/transfer-fee-calculator" class="text-teal-600 hover:underline">เครื่องคำนวณค่าโอนบ้านและที่ดิน</a>
+        และ <a href="/withholding-tax-calculator" class="text-teal-600 hover:underline">คำนวณภาษีหัก ณ ที่จ่ายสำหรับฟรีแลนซ์</a>
+        รวมถึงเครื่องมือทั่วไปอย่าง <a href="/land-converter" class="text-teal-600 hover:underline">แปลงหน่วยที่ดิน</a>
+        และ <a href="/date-calculator" class="text-teal-600 hover:underline">นับวัน คำนวณอายุ</a>
       </p>
       <p>
-        เว็บไซต์ออกแบบมาให้โหลดเร็ว รองรับภาษาไทยเต็มรูปแบบ และใช้งานได้บนมือถือ ทั้งหมดนี้ฟรี ไม่มีค่าใช้จ่าย ไม่ต้องสมัครสมาชิก
+        เว็บไซต์ออกแบบมาให้โหลดเร็ว รองรับภาษาไทยเต็มรูปแบบ และใช้งานได้บนมือถือ ทุก tool ประมวลผลบน browser ของคุณ 100% ข้อมูลไม่ออกจากเครื่อง ทั้งหมดนี้ฟรี ไม่มีค่าใช้จ่าย ไม่ต้องสมัครสมาชิก
       </p>
     </section>
 
