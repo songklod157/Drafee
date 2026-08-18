@@ -45,8 +45,9 @@ import Icon from '../../components/Icon.astro';
                 </button>
               </div>
               <p id="no-caption" class="mt-2 h-4 text-xs font-medium text-pink-400"></p>
-              <button id="btn-no" class="absolute rounded-full border-2 border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-400">
+              <button id="btn-no" class="absolute rounded-full border-2 border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-400" style="position:absolute;">
                 ไม่ดีกว่า
+                <span id="dodge-badge" class="hidden">0</span>
               </button>
             </div>
           </section>
@@ -147,7 +148,7 @@ import Icon from '../../components/Icon.astro';
           <section data-step="submitting" class="step-panel hidden">
             <div class="rounded-3xl border border-pink-100 bg-white p-8 text-center shadow-sm">
               <div class="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-pink-200 border-t-pink-500"></div>
-              <p class="mt-4 text-sm text-gray-500">กำลังส่งคำตอบไปหาเค้า...</p>
+              <p id="loading-msg" class="mt-4 text-sm text-gray-500">กำลังห่อความรู้สึก...</p>
             </div>
           </section>
 
@@ -243,6 +244,48 @@ import Icon from '../../components/Icon.astro';
       15% { opacity: 1; }
       100% { opacity: 0; transform: translateY(-260px) scale(1.1); }
     }
+    /* confetti particle */
+    .confetti-particle {
+      position: fixed;
+      pointer-events: none;
+      font-size: 1.1rem;
+      animation: confetti-fly 0.9s ease-out forwards;
+      z-index: 999;
+    }
+    @keyframes confetti-fly {
+      0%   { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+      100% { opacity: 0; transform: translateY(-80px) scale(0.5) rotate(var(--rot, 45deg)); }
+    }
+    /* pulse on enabled next-btn */
+    @keyframes pulse-pink {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(236,72,153,0.4); }
+      50%       { box-shadow: 0 0 0 8px rgba(236,72,153,0); }
+    }
+    .next-btn:not(:disabled).pulse {
+      animation: pulse-pink 1.2s ease infinite;
+    }
+    /* shake on submit hover */
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%      { transform: translateX(-4px) rotate(-1deg); }
+      40%      { transform: translateX(4px) rotate(1deg); }
+      60%      { transform: translateX(-3px) rotate(-0.5deg); }
+      80%      { transform: translateX(3px) rotate(0.5deg); }
+    }
+    .shake-anim { animation: shake 0.4s ease; }
+    /* dodge count badge */
+    #dodge-badge {
+      position: absolute;
+      top: -8px; right: -8px;
+      background: #ec4899;
+      color: white;
+      font-size: 0.65rem;
+      font-weight: 700;
+      border-radius: 9999px;
+      padding: 1px 5px;
+      pointer-events: none;
+      transition: transform 0.15s ease;
+    }
   </style>
 
   <script is:inline>
@@ -332,6 +375,7 @@ import Icon from '../../components/Icon.astro';
       const captions = ['ไม่เอาน่าาา 🙈', 'จับไม่ได้หรอกก', 'งอแงจังเลย', 'ยอมแพ้เถอะ 🥹', 'กดปุ่มชมพูดีกว่านะ 💕'];
       let dodgeCount = 0;
       let lastDodgeTime = 0;
+      const dodgeBadge = document.getElementById('dodge-badge');
 
       function dodgeNoButton() {
         const now = Date.now();
@@ -349,6 +393,12 @@ import Icon from '../../components/Icon.astro';
         btnNo.style.transform = 'none';
         caption.textContent = captions[Math.min(dodgeCount, captions.length - 1)];
         dodgeCount += 1;
+
+        // update dodge counter badge
+        dodgeBadge.classList.remove('hidden');
+        dodgeBadge.textContent = dodgeCount;
+        dodgeBadge.style.transform = 'scale(1.4)';
+        setTimeout(() => { dodgeBadge.style.transform = 'scale(1)'; }, 150);
       }
 
       // place initial position: bottom-right corner of the card
@@ -376,7 +426,9 @@ import Icon from '../../components/Icon.astro';
       whenDateInput.min = today.toISOString().slice(0, 10);
 
       function updateWhenNextState() {
-        whenNextBtn.disabled = !whenDateInput.value || !selectedPeriod;
+        const ready = !!(whenDateInput.value && selectedPeriod);
+        whenNextBtn.disabled = !ready;
+        whenNextBtn.classList.toggle('pulse', ready);
       }
 
       whenDateInput.addEventListener('change', updateWhenNextState);
@@ -397,6 +449,22 @@ import Icon from '../../components/Icon.astro';
         goToStepIndex(stepIndex + 1);
       });
 
+      // Confetti burst
+      function spawnConfetti(x, y) {
+        const emojis = ['💕','✨','🌸','💖','⭐','🎀'];
+        for (let i = 0; i < 8; i++) {
+          const el = document.createElement('span');
+          el.className = 'confetti-particle';
+          el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+          el.style.left = `${x + (Math.random() - 0.5) * 60}px`;
+          el.style.top = `${y}px`;
+          el.style.setProperty('--rot', `${(Math.random() - 0.5) * 120}deg`);
+          el.style.animationDelay = `${Math.random() * 0.15}s`;
+          document.body.appendChild(el);
+          el.addEventListener('animationend', () => el.remove());
+        }
+      }
+
       // Choice steps
       panels.forEach((panel) => {
         const choiceGroup = panel.querySelector('[data-choices]');
@@ -404,31 +472,65 @@ import Icon from '../../components/Icon.astro';
         const questionLabel = choiceGroup.getAttribute('data-choices');
         const buttons = Array.from(choiceGroup.querySelectorAll('.choice-btn'));
         buttons.forEach((btn) => {
-          btn.addEventListener('click', () => {
+          btn.addEventListener('click', (e) => {
             buttons.forEach((b) => b.classList.remove('selected'));
             btn.classList.add('selected');
             answers[questionLabel] = btn.textContent.trim();
+            // confetti at tap position
+            const rect = btn.getBoundingClientRect();
+            spawnConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
             const stepIndex = QUESTION_STEPS.indexOf(panel.dataset.step);
             setTimeout(() => goToStepIndex(stepIndex + 1), 350);
           });
         });
       });
 
-      document.getElementById('submit-btn').addEventListener('click', submitAnswers);
+      // Shake submit button on hover/touch
+      const submitBtn = document.getElementById('submit-btn');
+      let submitShakeTime = 0;
+      function shakeSubmit() {
+        const now = Date.now();
+        if (now - submitShakeTime < 600) return;
+        submitShakeTime = now;
+        submitBtn.classList.remove('shake-anim');
+        void submitBtn.offsetWidth;
+        submitBtn.classList.add('shake-anim');
+        submitBtn.addEventListener('animationend', () => submitBtn.classList.remove('shake-anim'), { once: true });
+      }
+      submitBtn.addEventListener('pointerenter', shakeSubmit);
+      submitBtn.addEventListener('touchstart', shakeSubmit, { passive: true });
+
+      submitBtn.addEventListener('click', submitAnswers);
       document.getElementById('retry-btn').addEventListener('click', submitAnswers);
 
       async function submitAnswers() {
         showStep('submitting');
+
+        // Fake loading messages sequence
+        const loadingMsgs = [
+          'กำลังห่อความรู้สึก... 🎀',
+          'ใส่โบว์ชมพูให้เรียบร้อย...',
+          'กำลังส่งหาเค้า 💌',
+        ];
+        const loadingEl = document.getElementById('loading-msg');
+        let msgIndex = 0;
+        const msgTimer = setInterval(() => {
+          msgIndex = (msgIndex + 1) % loadingMsgs.length;
+          if (loadingEl) loadingEl.textContent = loadingMsgs[msgIndex];
+        }, 900);
+
         try {
           const res = await fetch('/api/send-email', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ to: toEmail, answers }),
           });
+          clearInterval(msgTimer);
           if (!res.ok) throw new Error('send failed');
           showStep('success');
           burstHearts();
         } catch {
+          clearInterval(msgTimer);
           showStep('error');
         }
       }
