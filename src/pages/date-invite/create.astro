@@ -112,8 +112,8 @@ const schema = JSON.stringify({
       emailError.classList.add('hidden');
       emailInput.classList.remove('border-red-400');
 
-      const payload = toBase64Url(JSON.stringify({ email }));
-      const link = `${location.origin}/date-invite/play?d=${payload}`;
+      const payload = toBase64Url(email);
+      const link = `${location.origin}/d?d=${payload}`;
 
       linkOutput.value = link;
       formStep.classList.add('hidden');

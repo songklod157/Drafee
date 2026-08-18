@@ -1,6 +1,6 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import Icon from '../../components/Icon.astro';
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
 ---
 
 <Layout
@@ -272,7 +272,6 @@ import Icon from '../../components/Icon.astro';
       15% { opacity: 1; }
       100% { opacity: 0; transform: translateY(-260px) scale(1.1); }
     }
-    /* confetti particle */
     .confetti-particle {
       position: fixed;
       pointer-events: none;
@@ -284,7 +283,6 @@ import Icon from '../../components/Icon.astro';
       0%   { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
       100% { opacity: 0; transform: translateY(-80px) scale(0.5) rotate(var(--rot, 45deg)); }
     }
-    /* pulse on enabled next-btn */
     @keyframes pulse-pink {
       0%, 100% { box-shadow: 0 0 0 0 rgba(236,72,153,0.4); }
       50%       { box-shadow: 0 0 0 8px rgba(236,72,153,0); }
@@ -292,7 +290,6 @@ import Icon from '../../components/Icon.astro';
     .next-btn:not(:disabled).pulse {
       animation: pulse-pink 1.2s ease infinite;
     }
-    /* shake on submit hover */
     @keyframes shake {
       0%,100% { transform: translateX(0); }
       20%      { transform: translateX(-4px) rotate(-1deg); }
@@ -301,7 +298,6 @@ import Icon from '../../components/Icon.astro';
       80%      { transform: translateX(3px) rotate(0.5deg); }
     }
     .shake-anim { animation: shake 0.4s ease; }
-    /* dodge count badge */
     #dodge-badge {
       position: absolute;
       top: -8px; right: -8px;
@@ -330,15 +326,8 @@ import Icon from '../../components/Icon.astro';
     let requesterEmail = null;
     try {
       const decoded = fromBase64Url(raw || '');
-      // Try new format: raw email
       if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(decoded)) {
         requesterEmail = decoded;
-      } else {
-        // Try old format: JSON { email }
-        const obj = JSON.parse(decoded);
-        if (obj && typeof obj.email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(obj.email)) {
-          requesterEmail = obj.email;
-        }
       }
     } catch {
       requesterEmail = null;
@@ -402,7 +391,6 @@ import Icon from '../../components/Icon.astro';
         }
       }
 
-      // Step 0: yes / no dodge game
       const arena = document.getElementById('yesno-arena');
       const btnYes = document.getElementById('btn-yes');
       const btnNo = document.getElementById('btn-no');
@@ -429,14 +417,12 @@ import Icon from '../../components/Icon.astro';
         caption.textContent = captions[Math.min(dodgeCount, captions.length - 1)];
         dodgeCount += 1;
 
-        // update dodge counter badge
         dodgeBadge.classList.remove('hidden');
         dodgeBadge.textContent = dodgeCount;
         dodgeBadge.style.transform = 'scale(1.4)';
         setTimeout(() => { dodgeBadge.style.transform = 'scale(1)'; }, 150);
       }
 
-      // place initial position: bottom-right corner of the card
       const noRect = btnNo.getBoundingClientRect();
       const initialX = Math.max(arena.clientWidth - noRect.width - 16, 8);
       const initialY = Math.max(arena.clientHeight - noRect.height - 16, 8);
@@ -451,7 +437,6 @@ import Icon from '../../components/Icon.astro';
       btnYes.addEventListener('click', () => showStep('0b'));
       document.getElementById('btn-tease-next').addEventListener('click', () => goToStepIndex(0));
 
-      // Step 1: date + time-of-day picker
       const whenDateInput = document.getElementById('when-date');
       const whenPeriodButtons = Array.from(document.querySelectorAll('#when-period-choices .choice-btn'));
       const whenNextBtn = document.getElementById('when-next-btn');
@@ -484,7 +469,6 @@ import Icon from '../../components/Icon.astro';
         goToStepIndex(stepIndex + 1);
       });
 
-      // Confetti burst
       function spawnConfetti(x, y) {
         const emojis = ['💕','✨','🌸','💖','⭐','🎀'];
         for (let i = 0; i < 8; i++) {
@@ -500,7 +484,6 @@ import Icon from '../../components/Icon.astro';
         }
       }
 
-      // Choice steps
       panels.forEach((panel) => {
         const choiceGroup = panel.querySelector('[data-choices]');
         if (!choiceGroup) return;
@@ -511,7 +494,6 @@ import Icon from '../../components/Icon.astro';
             buttons.forEach((b) => b.classList.remove('selected'));
             btn.classList.add('selected');
             answers[questionLabel] = btn.textContent.trim();
-            // confetti at tap position
             const rect = btn.getBoundingClientRect();
             spawnConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
             const stepIndex = QUESTION_STEPS.indexOf(panel.dataset.step);
@@ -520,7 +502,6 @@ import Icon from '../../components/Icon.astro';
         });
       });
 
-      // Step dino: both buttons go to dino-reveal (joke)
       document.querySelectorAll('.dino-btn').forEach((btn) => {
         btn.addEventListener('click', () => {
           const rect = btn.getBoundingClientRect();
@@ -532,7 +513,6 @@ import Icon from '../../components/Icon.astro';
         goToStepIndex(QUESTION_STEPS.indexOf('5'));
       });
 
-      // Shake submit button on hover/touch
       const submitBtn = document.getElementById('submit-btn');
       let submitShakeTime = 0;
       function shakeSubmit() {
@@ -553,7 +533,6 @@ import Icon from '../../components/Icon.astro';
       async function submitAnswers() {
         showStep('submitting');
 
-        // Fake loading messages sequence
         const loadingMsgs = [
           'กำลังห่อความรู้สึก... 🎀',
           'ใส่โบว์ชมพูให้เรียบร้อย...',
@@ -597,4 +576,3 @@ import Icon from '../../components/Icon.astro';
     }
   </script>
 </Layout>
-
