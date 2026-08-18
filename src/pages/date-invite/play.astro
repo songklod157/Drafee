@@ -331,8 +331,13 @@ import Icon from '../../components/Icon.astro';
       const caption = document.getElementById('no-caption');
       const captions = ['ไม่เอาน่าาา 🙈', 'จับไม่ได้หรอกก', 'งอแงจังเลย', 'ยอมแพ้เถอะ 🥹', 'กดปุ่มซ้ายดีกว่านะ'];
       let dodgeCount = 0;
+      let lastDodgeTime = 0;
 
       function dodgeNoButton() {
+        const now = Date.now();
+        if (now - lastDodgeTime < 200) return;
+        lastDodgeTime = now;
+
         const bounds = arena.getBoundingClientRect();
         const btnRect = btnNo.getBoundingClientRect();
         const maxX = Math.max(bounds.width - btnRect.width, 0);
@@ -354,9 +359,8 @@ import Icon from '../../components/Icon.astro';
       btnNo.style.top = `${initialY}px`;
       btnNo.style.transform = 'none';
 
-      btnNo.addEventListener('pointerenter', dodgeNoButton);
-      btnNo.addEventListener('pointerdown', (e) => { e.preventDefault(); dodgeNoButton(); });
       btnNo.addEventListener('touchstart', (e) => { e.preventDefault(); dodgeNoButton(); }, { passive: false });
+      btnNo.addEventListener('pointerenter', dodgeNoButton);
       btnNo.addEventListener('click', (e) => e.preventDefault());
 
       btnYes.addEventListener('click', () => showStep('0b'));
