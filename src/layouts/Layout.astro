@@ -4,10 +4,15 @@ interface Props {
   description: string;
   canonical?: string;
   schemaJson?: string;
+  fullscreen?: boolean;
+  ogImage?: string;
+  ogImageAlt?: string;
 }
 
-const { title, description, schemaJson } = Astro.props;
+const { title, description, schemaJson, fullscreen = false } = Astro.props;
 const canonical = Astro.props.canonical || `https://drafee.com${Astro.url.pathname}`;
+const ogImage = Astro.props.ogImage || 'https://drafee.com/og.png';
+const ogImageAlt = Astro.props.ogImageAlt || 'Drafee — เครื่องมือออนไลน์ฟรีสำหรับคนไทย';
 
 const navLinks = [
   { href: '/ig-line-break', label: 'เว้นบรรทัด IG' },
@@ -37,16 +42,16 @@ const currentPath = Astro.url.pathname;
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Drafee" />
   <meta property="og:locale" content="th_TH" />
-  <meta property="og:image" content="https://drafee.com/og.png" />
+  <meta property="og:image" content={ogImage} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Drafee — เครื่องมือออนไลน์ฟรีสำหรับคนไทย" />
+  <meta property="og:image:alt" content={ogImageAlt} />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
-  <meta name="twitter:image" content="https://drafee.com/og.png" />
+  <meta name="twitter:image" content={ogImage} />
 
   <!-- hreflang -->
   <link rel="alternate" hreflang="th" href={canonical} />
@@ -65,7 +70,7 @@ const currentPath = Astro.url.pathname;
 <body class="min-h-screen bg-gray-50 font-sans text-gray-900 antialiased">
 
   <!-- Header -->
-  <header class="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur-sm">
+  <header class:list={["sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur-sm", { hidden: fullscreen }]}>
     <div class="mx-auto max-w-6xl px-4">
       <div class="flex h-14 items-center justify-between gap-4">
 
@@ -123,7 +128,7 @@ const currentPath = Astro.url.pathname;
   </main>
 
   <!-- Footer -->
-  <footer class="mt-16 border-t border-gray-200 bg-white">
+  <footer class:list={["mt-16 border-t border-gray-200 bg-white", { hidden: fullscreen }]}>
     <div class="mx-auto max-w-6xl px-4 py-10">
       <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
         <!-- Brand -->
@@ -153,6 +158,7 @@ const currentPath = Astro.url.pathname;
           <ul class="space-y-2">
             <li><a href="/land-converter" class="text-sm text-gray-600 hover:text-teal-600">แปลงหน่วยที่ดิน</a></li>
             <li><a href="/date-calculator" class="text-sm text-gray-600 hover:text-teal-600">นับวัน / คำนวณอายุ</a></li>
+            <li><a href="/date-invite/create" class="text-sm text-gray-600 hover:text-pink-600">ชวนแฟนไปเดท</a></li>
           </ul>
         </div>
 
@@ -176,7 +182,7 @@ const currentPath = Astro.url.pathname;
           <strong>คำเตือน:</strong> เครื่องมือทุกชิ้นบนเว็บไซต์นี้จัดทำขึ้นเพื่อให้ข้อมูลเบื้องต้นเท่านั้น ไม่ใช่คำแนะนำทางกฎหมายหรือการเงิน
           กรุณาตรวจสอบกับผู้เชี่ยวชาญหรือหน่วยงานที่เกี่ยวข้องก่อนตัดสินใจ ข้อมูลอาจมีการเปลี่ยนแปลง
         </p>
-        <p class="mt-3 text-xs text-gray-400">© {new Date().getFullYear()} Drafee · drafee.com · ข้อมูลทุกอย่างประมวลผลบน browser ของคุณ ไม่มีการส่งข้อมูลออกไปยังเซิร์ฟเวอร์</p>
+        <p class="mt-3 text-xs text-gray-400">© {new Date().getFullYear()} Drafee · drafee.com · เครื่องคำนวณทุกตัวประมวลผลบน browser ของคุณ ไม่มีการส่งข้อมูลออกไปยังเซิร์ฟเวอร์</p>
         <p class="mt-2 text-xs text-gray-400">ติดต่อ: <a href="mailto:drafee.ai@gmail.com" class="hover:text-teal-600 transition-colors">drafee.ai@gmail.com</a></p>
       </div>
     </div>
@@ -184,9 +190,12 @@ const currentPath = Astro.url.pathname;
 
   <!-- Mobile Nav Script -->
   <script is:inline>
-    document.getElementById('nav-toggle').addEventListener('click', function() {
-      document.getElementById('mobile-nav').classList.toggle('hidden');
-    });
+    const navToggle = document.getElementById('nav-toggle');
+    if (navToggle) {
+      navToggle.addEventListener('click', function() {
+        document.getElementById('mobile-nav').classList.toggle('hidden');
+      });
+    }
   </script>
 
 </body>

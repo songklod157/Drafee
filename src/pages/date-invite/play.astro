@@ -1,0 +1,446 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+---
+
+<Layout
+  title="มีคนอยากชวนเธอไปเดท 💌 | Drafee"
+  description="มีคนส่งคำขอเดทน่ารักๆ มาให้คุณ ตอบคำถามสนุกๆ ทีละข้อ แล้วบอกเค้าไปเลย"
+  ogImage="https://drafee.com/og-date-invite.png"
+  ogImageAlt="มีคนอยากชวนเธอไปเดทด้วยกัน — Drafee"
+  fullscreen
+>
+  <div class="min-h-screen bg-gradient-to-b from-pink-50 via-rose-50 to-white">
+    <div class="mx-auto flex min-h-screen max-w-lg flex-col px-4 py-6 sm:py-10">
+
+      <!-- Invalid link state -->
+      <div id="invalid-state" class="hidden flex-1 flex-col items-center justify-center text-center">
+        <Icon name="warning" class="h-10 w-10 text-gray-300" />
+        <h1 class="mt-4 text-xl font-bold text-gray-900">ลิงก์นี้ใช้งานไม่ได้</h1>
+        <p class="mt-2 text-sm text-gray-500">ลิงก์อาจไม่สมบูรณ์ ลองขอลิงก์ใหม่จากคนที่ส่งมาดูนะ</p>
+        <a href="/date-invite/create" class="mt-6 rounded-xl bg-pink-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-pink-600">
+          สร้างลิงก์ชวนเดทของตัวเอง →
+        </a>
+      </div>
+
+      <div id="play-state" class="hidden flex-1 flex-col">
+
+        <!-- Progress -->
+        <div id="progress-wrap" class="mb-6 flex justify-center gap-1.5">
+        </div>
+
+        <!-- Steps -->
+        <div class="relative flex flex-1 flex-col justify-center">
+
+          <!-- Step 0: yes/no -->
+          <section data-step="0" class="step-panel">
+            <div id="yesno-arena" class="relative rounded-3xl border border-pink-100 bg-white p-6 text-center shadow-sm sm:p-8">
+              <div class="text-4xl">🥺💌</div>
+              <h1 class="mt-4 text-xl font-bold leading-relaxed text-gray-900 sm:text-2xl">
+                อยากจะชวนเธอไปเดทอ่ะ<br/>ไปเดทด้วยกันกับเราไหมมม
+              </h1>
+              <div class="relative mt-8 h-16">
+                <button id="btn-yes" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-pink-500 px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-pink-200 transition-transform hover:scale-105 active:scale-95">
+                  ไปสิ! 💕
+                </button>
+              </div>
+              <p id="no-caption" class="mt-2 h-4 text-xs font-medium text-pink-400"></p>
+              <button id="btn-no" class="absolute rounded-full border-2 border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-400">
+                ไม่ดีกว่า
+              </button>
+            </div>
+          </section>
+
+          <!-- Step 0b: teasing confirmation -->
+          <section data-step="0b" class="step-panel hidden">
+            <div class="rounded-3xl border border-pink-100 bg-white p-6 text-center shadow-sm sm:p-8">
+              <div class="text-4xl">😳</div>
+              <h1 class="mt-4 text-xl font-bold leading-relaxed text-gray-900 sm:text-2xl">
+                เดี๋ยวนะ นี่เธอตอบตกลงหรอ
+              </h1>
+              <p class="mt-2 text-sm font-medium text-pink-400">
+                นึกว่าจะปฏิเสธกันซะอีกกก แอบดีใจจนตัวลอยเลยยย 🎈
+              </p>
+              <button id="btn-tease-next" class="next-btn mt-6">เออ เออ เข้าใจแล้ว 😏</button>
+            </div>
+          </section>
+
+          <!-- Step 1: when -->
+          <section data-step="1" class="step-panel hidden">
+            <div class="rounded-3xl border border-pink-100 bg-white p-6 text-center shadow-sm sm:p-8">
+              <div class="text-3xl">🎉</div>
+              <h2 class="mt-3 text-lg font-bold text-gray-900 sm:text-xl">เย่ๆ! อยากไปเดทกันวันไหน เวลาไหนดี?</h2>
+
+              <label class="mt-6 block text-left text-sm font-medium text-gray-700">เลือกวันที่</label>
+              <input id="when-date" type="date" class="mt-1.5 w-full rounded-xl border border-gray-300 px-4 py-3 text-center focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-200" />
+
+              <p class="mt-5 text-left text-sm font-medium text-gray-700">ช่วงเวลาไหนดี</p>
+              <div class="mt-1.5 grid grid-cols-2 gap-3" id="when-period-choices">
+                <button type="button" class="choice-btn" data-period="เช้า">เช้า 🌅</button>
+                <button type="button" class="choice-btn" data-period="สาย">สาย ☀️</button>
+                <button type="button" class="choice-btn" data-period="บ่าย">บ่าย 🌤️</button>
+                <button type="button" class="choice-btn" data-period="เย็น">เย็น 🌆</button>
+              </div>
+
+              <button id="when-next-btn" class="next-btn mt-6 disabled:cursor-not-allowed disabled:opacity-40" disabled>ถัดไป →</button>
+            </div>
+          </section>
+
+          <!-- Step 2: vibe -->
+          <section data-step="2" class="step-panel hidden">
+            <div class="rounded-3xl border border-pink-100 bg-white p-6 text-center shadow-sm sm:p-8">
+              <div class="text-3xl">✨</div>
+              <h2 class="mt-3 text-lg font-bold text-gray-900 sm:text-xl">บรรยากาศแบบไหนที่ชอบ?</h2>
+              <div class="mt-6 grid grid-cols-2 gap-3" data-choices="บรรยากาศที่ชอบ">
+                <button class="choice-btn">ทะเล 🌊</button>
+                <button class="choice-btn">ในเมือง 🏙️</button>
+                <button class="choice-btn">คาเฟ่ชิลๆ ☕</button>
+                <button class="choice-btn">ธรรมชาติ 🌳</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Step 3: food -->
+          <section data-step="3" class="step-panel hidden">
+            <div class="rounded-3xl border border-pink-100 bg-white p-6 text-center shadow-sm sm:p-8">
+              <div class="text-3xl">🍽️</div>
+              <h2 class="mt-3 text-lg font-bold text-gray-900 sm:text-xl">อยากกินอะไรเป็นพิเศษไหม?</h2>
+              <div class="mt-6 grid grid-cols-2 gap-3" data-choices="เมนูในฝัน">
+                <button class="choice-btn">อาหารไทย 🍜</button>
+                <button class="choice-btn">อาหารญี่ปุ่น 🍣</button>
+                <button class="choice-btn">อาหารอิตาเลียน 🍝</button>
+                <button class="choice-btn">ขอเป็นเซอร์ไพรส์ 🎲</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Step 4: activity -->
+          <section data-step="4" class="step-panel hidden">
+            <div class="rounded-3xl border border-pink-100 bg-white p-6 text-center shadow-sm sm:p-8">
+              <div class="text-3xl">🎡</div>
+              <h2 class="mt-3 text-lg font-bold text-gray-900 sm:text-xl">อยากให้พาไปทำอะไรด้วยกัน?</h2>
+              <div class="mt-6 grid grid-cols-2 gap-3" data-choices="กิจกรรมที่อยากทำ">
+                <button class="choice-btn">ดูหนัง 🎬</button>
+                <button class="choice-btn">เดินเล่น 🚶‍♀️</button>
+                <button class="choice-btn">ถ่ายรูป 📸</button>
+                <button class="choice-btn">เล่นเกม 🎮</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Step 5: message -->
+          <section data-step="5" class="step-panel hidden">
+            <div class="rounded-3xl border border-pink-100 bg-white p-6 text-center shadow-sm sm:p-8">
+              <div class="text-3xl">💌</div>
+              <h2 class="mt-3 text-lg font-bold text-gray-900 sm:text-xl">ดีใจที่เธอตอบตกลงนะ 🥰</h2>
+              <p class="mt-2 text-base text-gray-700 leading-relaxed">
+                เดี๋ยวจะไปรับตอน <span id="pickup-time-display" class="font-semibold text-pink-600">...</span> นะ 💕
+              </p>
+              <p class="mt-4 text-sm text-gray-400 italic">
+                ป.ล. ห้ามมาสายนะ ไม่งั้นโดนกอดแก้ตัวยาวๆ เลย 😏
+              </p>
+              <button id="submit-btn" class="next-btn mt-6">ส่งคำตอบเลย 💌</button>
+            </div>
+          </section>
+
+          <!-- Submitting -->
+          <section data-step="submitting" class="step-panel hidden">
+            <div class="rounded-3xl border border-pink-100 bg-white p-8 text-center shadow-sm">
+              <div class="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-pink-200 border-t-pink-500"></div>
+              <p class="mt-4 text-sm text-gray-500">กำลังส่งคำตอบไปหาเค้า...</p>
+            </div>
+          </section>
+
+          <!-- Success -->
+          <section data-step="success" class="step-panel hidden">
+            <div class="relative overflow-hidden rounded-3xl border border-pink-100 bg-white p-8 text-center shadow-sm">
+              <div id="hearts-burst" class="pointer-events-none absolute inset-0"></div>
+              <div class="text-4xl">🎉💖</div>
+              <h2 class="mt-4 text-xl font-bold text-gray-900">ส่งคำตอบเรียบร้อย!</h2>
+              <p class="mt-2 text-sm text-gray-500">เราบอกเค้าไปแล้วว่าคุณตอบเสร็จแล้วนะ ไปเดทกันให้สนุกเลย 💕</p>
+            </div>
+          </section>
+
+          <!-- Error -->
+          <section data-step="error" class="step-panel hidden">
+            <div class="rounded-3xl border border-red-100 bg-white p-8 text-center shadow-sm">
+              <Icon name="warning" class="mx-auto h-8 w-8 text-red-300" />
+              <h2 class="mt-3 text-lg font-bold text-gray-900">ส่งไม่สำเร็จ</h2>
+              <p class="mt-2 text-sm text-gray-500">ลองใหม่อีกครั้งนะ</p>
+              <button id="retry-btn" class="next-btn mt-5">ลองอีกครั้ง</button>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .step-panel {
+      animation: step-in 0.35s ease both;
+    }
+    @keyframes step-in {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .choice-btn {
+      border-radius: 0.75rem;
+      border: 2px solid #f3d9e3;
+      background: white;
+      padding: 0.9rem 1rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #374151;
+      transition: transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+    }
+    .choice-btn:hover {
+      border-color: #ec4899;
+      transform: translateY(-1px);
+    }
+    .choice-btn.selected {
+      border-color: #ec4899;
+      background-color: #fdf2f8;
+      color: #db2777;
+    }
+    .next-btn {
+      width: 100%;
+      border-radius: 0.75rem;
+      background-color: #ec4899;
+      padding: 0.9rem 1rem;
+      font-weight: 700;
+      color: white;
+      transition: background-color 0.15s ease;
+    }
+    .next-btn:hover {
+      background-color: #db2777;
+    }
+    #btn-no {
+      transition: left 0.25s ease, top 0.25s ease, transform 0.25s ease;
+    }
+    .progress-dot {
+      height: 0.4rem;
+      width: 0.4rem;
+      border-radius: 9999px;
+      background-color: #fbcfe8;
+      transition: background-color 0.2s ease, width 0.2s ease;
+    }
+    .progress-dot.active {
+      background-color: #ec4899;
+      width: 1.3rem;
+    }
+    .progress-dot.done {
+      background-color: #f472b6;
+    }
+    .heart-particle {
+      position: absolute;
+      bottom: -10%;
+      font-size: 1.4rem;
+      animation: float-up 1.8s ease-in forwards;
+    }
+    @keyframes float-up {
+      0% { opacity: 0; transform: translateY(0) scale(0.6); }
+      15% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-260px) scale(1.1); }
+    }
+  </style>
+
+  <script is:inline>
+    function fromBase64Url(str) {
+      const padded = str.replace(/-/g, '+').replace(/_/g, '/').padEnd(str.length + (4 - (str.length % 4)) % 4, '=');
+      const binary = atob(padded);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      return new TextDecoder().decode(bytes);
+    }
+
+    const params = new URLSearchParams(location.search);
+    const raw = params.get('d');
+    let requesterEmail = null;
+    try {
+      const decoded = JSON.parse(fromBase64Url(raw || ''));
+      if (decoded && typeof decoded.email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(decoded.email)) {
+        requesterEmail = decoded.email;
+      }
+    } catch {
+      requesterEmail = null;
+    }
+
+    const invalidState = document.getElementById('invalid-state');
+    const playState = document.getElementById('play-state');
+
+    if (!requesterEmail) {
+      invalidState.classList.remove('hidden');
+      invalidState.classList.add('flex');
+    } else {
+      playState.classList.remove('hidden');
+      playState.classList.add('flex');
+      initFlow(requesterEmail);
+    }
+
+    function initFlow(toEmail) {
+      const QUESTION_STEPS = ['1', '2', '3', '4', '5'];
+      const progressWrap = document.getElementById('progress-wrap');
+      QUESTION_STEPS.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'progress-dot';
+        dot.dataset.dotIndex = String(i);
+        progressWrap.appendChild(dot);
+      });
+
+      const answers = {};
+      const panels = Array.from(document.querySelectorAll('.step-panel'));
+      const getPanel = (key) => panels.find((p) => p.dataset.step === key);
+
+      function updateProgress(currentQuestionIndex) {
+        Array.from(progressWrap.children).forEach((dot, i) => {
+          dot.classList.toggle('active', i === currentQuestionIndex);
+          dot.classList.toggle('done', i < currentQuestionIndex);
+        });
+      }
+
+      function showStep(key) {
+        panels.forEach((p) => p.classList.add('hidden'));
+        const panel = getPanel(key);
+        panel.classList.remove('hidden');
+        void panel.offsetWidth;
+        panel.style.animation = 'none';
+        void panel.offsetWidth;
+        panel.style.animation = '';
+        const qIndex = QUESTION_STEPS.indexOf(key);
+        progressWrap.style.display = qIndex === -1 ? 'none' : 'flex';
+        if (qIndex !== -1) updateProgress(qIndex);
+        if (key === '5') {
+          const pickupTimeDisplay = document.getElementById('pickup-time-display');
+          pickupTimeDisplay.textContent = answers['วันที่นัด'] || '...';
+        }
+      }
+
+      function goToStepIndex(index) {
+        if (index < QUESTION_STEPS.length) {
+          showStep(QUESTION_STEPS[index]);
+        } else {
+          submitAnswers();
+        }
+      }
+
+      // Step 0: yes / no dodge game
+      const arena = document.getElementById('yesno-arena');
+      const btnYes = document.getElementById('btn-yes');
+      const btnNo = document.getElementById('btn-no');
+      const caption = document.getElementById('no-caption');
+      const captions = ['ไม่เอาน่าาา 🙈', 'จับไม่ได้หรอกก', 'งอแงจังเลย', 'ยอมแพ้เถอะ 🥹', 'กดปุ่มซ้ายดีกว่านะ'];
+      let dodgeCount = 0;
+
+      function dodgeNoButton() {
+        const bounds = arena.getBoundingClientRect();
+        const btnRect = btnNo.getBoundingClientRect();
+        const maxX = Math.max(bounds.width - btnRect.width, 0);
+        const maxY = Math.max(bounds.height - btnRect.height, 0);
+        const x = Math.random() * maxX;
+        const y = Math.random() * maxY;
+        btnNo.style.left = `${x}px`;
+        btnNo.style.top = `${y}px`;
+        btnNo.style.transform = 'none';
+        caption.textContent = captions[Math.min(dodgeCount, captions.length - 1)];
+        dodgeCount += 1;
+      }
+
+      // place initial position: bottom-right corner of the card
+      const noRect = btnNo.getBoundingClientRect();
+      const initialX = Math.max(arena.clientWidth - noRect.width - 16, 8);
+      const initialY = Math.max(arena.clientHeight - noRect.height - 16, 8);
+      btnNo.style.left = `${initialX}px`;
+      btnNo.style.top = `${initialY}px`;
+      btnNo.style.transform = 'none';
+
+      btnNo.addEventListener('pointerenter', dodgeNoButton);
+      btnNo.addEventListener('pointerdown', (e) => { e.preventDefault(); dodgeNoButton(); });
+      btnNo.addEventListener('touchstart', (e) => { e.preventDefault(); dodgeNoButton(); }, { passive: false });
+      btnNo.addEventListener('click', (e) => e.preventDefault());
+
+      btnYes.addEventListener('click', () => showStep('0b'));
+      document.getElementById('btn-tease-next').addEventListener('click', () => goToStepIndex(0));
+
+      // Step 1: date + time-of-day picker
+      const whenDateInput = document.getElementById('when-date');
+      const whenPeriodButtons = Array.from(document.querySelectorAll('#when-period-choices .choice-btn'));
+      const whenNextBtn = document.getElementById('when-next-btn');
+      let selectedPeriod = null;
+
+      const today = new Date();
+      whenDateInput.min = today.toISOString().slice(0, 10);
+
+      function updateWhenNextState() {
+        whenNextBtn.disabled = !whenDateInput.value || !selectedPeriod;
+      }
+
+      whenDateInput.addEventListener('change', updateWhenNextState);
+      whenPeriodButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          whenPeriodButtons.forEach((b) => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          selectedPeriod = btn.dataset.period;
+          updateWhenNextState();
+        });
+      });
+
+      whenNextBtn.addEventListener('click', () => {
+        const dateObj = new Date(`${whenDateInput.value}T00:00:00`);
+        const dateLabel = dateObj.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+        answers['วันที่นัด'] = `${dateLabel} ช่วง${selectedPeriod}`;
+        const stepIndex = QUESTION_STEPS.indexOf('1');
+        goToStepIndex(stepIndex + 1);
+      });
+
+      // Choice steps
+      panels.forEach((panel) => {
+        const choiceGroup = panel.querySelector('[data-choices]');
+        if (!choiceGroup) return;
+        const questionLabel = choiceGroup.getAttribute('data-choices');
+        const buttons = Array.from(choiceGroup.querySelectorAll('.choice-btn'));
+        buttons.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            buttons.forEach((b) => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            answers[questionLabel] = btn.textContent.trim();
+            const stepIndex = QUESTION_STEPS.indexOf(panel.dataset.step);
+            setTimeout(() => goToStepIndex(stepIndex + 1), 350);
+          });
+        });
+      });
+
+      document.getElementById('submit-btn').addEventListener('click', submitAnswers);
+      document.getElementById('retry-btn').addEventListener('click', submitAnswers);
+
+      async function submitAnswers() {
+        showStep('submitting');
+        try {
+          const res = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ to: toEmail, answers }),
+          });
+          if (!res.ok) throw new Error('send failed');
+          showStep('success');
+          burstHearts();
+        } catch {
+          showStep('error');
+        }
+      }
+
+      function burstHearts() {
+        const container = document.getElementById('hearts-burst');
+        const emojis = ['💖', '💕', '💗', '✨'];
+        for (let i = 0; i < 16; i++) {
+          const el = document.createElement('span');
+          el.className = 'heart-particle';
+          el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+          el.style.left = `${Math.random() * 90 + 5}%`;
+          el.style.animationDelay = `${Math.random() * 0.6}s`;
+          container.appendChild(el);
+        }
+      }
+    }
+  </script>
+</Layout>
